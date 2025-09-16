@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">KodeLearn</string>
+    <string name="profile_tab">Perfil</string>
+    <string name="learning_tab">Aprender</string>
+    <string name="daily_streak">Racha diaria</string>
+    <string name="total_xp">XP total</string>
+    <string name="league">Liga</string>
+    <string name="hearts">Vidas</string>
+    <string name="coins">Monedas</string>
+    <string name="share_progress">Compartir mi progreso</string>
+    <string name="try_pro_free">Prueba PRO Gratis</string>
+    <string name="add_biography">Añadir biografía</string>
+    <string name="friends">Amigos</string>
+    <string name="no_friends_yet">Aún sin amigos/as</string>
+    <string name="add_friends">Añadir amigos</string>
+    <string name="course_progress">Progreso del curso</string>
+    <string name="modules_completed">%1$d de %2$d módulos completados</string>
+    <string name="lessons_completed">%1$d/%2$d lecciones</string>
+    <string name="statistics">Estadísticas</string>
+    <string name="course_modules">Módulos del curso</string>
+</resources>
