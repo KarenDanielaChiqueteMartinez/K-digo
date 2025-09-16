@@ -1,11 +1,10 @@
 package com.example.kodelearn
 
 import android.app.Application
-import androidx.lifecycle.lifecycleScope
 import com.example.kodelearn.data.MockData
 import com.example.kodelearn.data.database.KodeLearnDatabase
 import com.example.kodelearn.data.repository.KodeLearnRepository
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class KodeLearnApplication : Application() {
     
@@ -30,20 +29,12 @@ class KodeLearnApplication : Application() {
         // Use a simple thread to avoid complexity in this base implementation
         Thread {
             try {
-                // Insert mock data
-                repository.run {
-                    // Check if user already exists
-                    val userDao = database.userDao()
-                    val existingUser = userDao.getCurrentUser()
-                    
-                    // Only insert if no data exists (first time setup)
-                    // This is a simplified check - in production you'd want better logic
-                    kotlinx.coroutines.runBlocking {
-                        insertUser(MockData.getDefaultUser())
-                        insertCourses(MockData.getDefaultCourses())
-                        insertModules(MockData.getDefaultModules())
-                        insertProgressList(MockData.getDefaultProgress())
-                    }
+                // Insert mock data using runBlocking
+                runBlocking {
+                    repository.insertUser(MockData.getDefaultUser())
+                    repository.insertCourses(MockData.getDefaultCourses())
+                    repository.insertModules(MockData.getDefaultModules())
+                    repository.insertProgressList(MockData.getDefaultProgress())
                 }
             } catch (e: Exception) {
                 // In a production app, you'd want proper error handling
