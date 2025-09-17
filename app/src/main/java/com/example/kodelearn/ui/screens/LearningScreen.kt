@@ -15,6 +15,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kodelearn.data.repository.KodeLearnRepository
 import com.example.kodelearn.ui.components.LearningTopBar
 import com.example.kodelearn.ui.components.ModuleItem
+import com.example.kodelearn.ui.theme.KodeLearnTheme
 import com.example.kodelearn.ui.viewmodel.LearningViewModel
 
 @Composable
@@ -261,7 +262,8 @@ private fun LearningScreenContent() {
             }
             
             // Sample Modules for Preview
-            items(getSampleModulesForPreview()) { moduleWithProgress ->
+            val sampleModules = getSampleModulesForPreview()
+            items(sampleModules) { moduleWithProgress ->
                 ModuleItem(
                     module = moduleWithProgress.module,
                     progress = moduleWithProgress.progress,
@@ -276,7 +278,6 @@ private fun LearningScreenContent() {
     }
 }
 
-@Composable
 private fun getSampleModulesForPreview(): List<com.example.kodelearn.data.repository.ModuleWithProgress> {
     return listOf(
         com.example.kodelearn.data.repository.ModuleWithProgress(
