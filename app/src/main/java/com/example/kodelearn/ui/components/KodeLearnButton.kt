@@ -8,7 +8,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.kodelearn.ui.theme.KodeLearnTheme
 import com.example.kodelearn.ui.theme.PrimaryGreen
 import com.example.kodelearn.ui.theme.SecondaryBlue
 
@@ -91,4 +93,39 @@ enum class ButtonVariant {
     Primary,
     Secondary,
     Outline
+}
+
+@Preview(showBackground = true, name = "Primary Button")
+@Composable
+fun KodeLearnButtonPrimaryPreview() {
+    KodeLearnTheme {
+        KodeLearnButton(
+            text = "Compartir mi progreso",
+            onClick = { }
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Secondary Button")
+@Composable
+fun KodeLearnButtonSecondaryPreview() {
+    KodeLearnTheme {
+        KodeLearnButton(
+            text = "Prueba PRO Gratis",
+            onClick = { },
+            variant = ButtonVariant.Secondary
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Outline Button")
+@Composable
+fun KodeLearnButtonOutlinePreview() {
+    KodeLearnTheme {
+        KodeLearnButton(
+            text = "Añadir amigos",
+            onClick = { },
+            variant = ButtonVariant.Outline
+        )
+    }
 }

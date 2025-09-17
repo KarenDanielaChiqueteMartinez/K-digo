@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kodelearn.data.repository.KodeLearnRepository
@@ -293,6 +294,150 @@ private fun FriendsSection() {
                     )
                 }
             )
+        }
+    }
+}
+
+@Preview(showBackground = true, name = "Profile Screen")
+@Composable
+fun ProfileScreenPreview() {
+    KodeLearnTheme {
+        ProfileScreenContent(
+            userName = "Estudiante Preview",
+            biography = "Apasionado por la programación",
+            dailyStreak = 5,
+            totalXP = 350,
+            league = "Bronze",
+            friendsCount = 0,
+            onBiographyChanged = {},
+            onShareProgress = {},
+            onTryPro = {},
+            onAddFriends = {}
+        )
+    }
+}
+
+@Composable
+private fun ProfileScreenContent(
+    userName: String,
+    biography: String,
+    dailyStreak: Int,
+    totalXP: Int,
+    league: String,
+    friendsCount: Int,
+    onBiographyChanged: (String) -> Unit,
+    onShareProgress: () -> Unit,
+    onTryPro: () -> Unit,
+    onAddFriends: () -> Unit
+) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(16.dp)
+    ) {
+        item {
+            // Profile Header
+            ProfileHeader(
+                name = userName,
+                biography = biography,
+                onBiographyChanged = onBiographyChanged
+            )
+        }
+        
+        item {
+            // Statistics Section
+            Text(
+                text = "Estadísticas",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+            
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                StatCard(
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.LocalFireDepartment,
+                            contentDescription = "Daily Streak",
+                            tint = WarningColor,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    },
+                    value = dailyStreak.toString(),
+                    label = "Racha diaria",
+                    modifier = Modifier.weight(1f),
+                    iconColor = WarningColor
+                )
+                
+                StatCard(
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Star,
+                            contentDescription = "Total XP",
+                            tint = XPColor,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    },
+                    value = totalXP.toString(),
+                    label = "XP total",
+                    modifier = Modifier.weight(1f),
+                    iconColor = XPColor
+                )
+            }
+            
+            Spacer(modifier = Modifier.height(12.dp))
+            
+            StatCard(
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.EmojiEvents,
+                        contentDescription = "League",
+                        tint = WoodenLeague,
+                        modifier = Modifier.size(24.dp)
+                    )
+                },
+                value = league,
+                label = "Liga",
+                iconColor = WoodenLeague
+            )
+        }
+        
+        item {
+            // Action Buttons
+            Column(
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                KodeLearnButton(
+                    text = "Compartir mi progreso",
+                    onClick = onShareProgress,
+                    modifier = Modifier.fillMaxWidth(),
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Share,
+                            contentDescription = "Share",
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                )
+                
+                KodeLearnButton(
+                    text = "Prueba PRO Gratis",
+                    onClick = onTryPro,
+                    modifier = Modifier.fillMaxWidth(),
+                    variant = com.example.kodelearn.ui.components.ButtonVariant.Secondary
+                )
+            }
+        }
+        
+        item {
+            // Friends Section
+            FriendsSection()
         }
     }
 }

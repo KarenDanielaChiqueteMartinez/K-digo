@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kodelearn.data.repository.KodeLearnRepository
@@ -202,4 +203,127 @@ private fun ProgressOverview(
             )
         }
     }
+}
+
+@Preview(showBackground = true, name = "Learning Screen")
+@Composable
+fun LearningScreenPreview() {
+    KodeLearnTheme {
+        LearningScreenContent()
+    }
+}
+
+@Composable
+private fun LearningScreenContent() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        // Top Bar with Hearts, Coins, and Streak
+        LearningTopBar(
+            hearts = 5,
+            coins = 220,
+            streak = 3
+        )
+        
+        // Course Content
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            item {
+                // Course Header
+                CourseHeader(
+                    courseName = "Python",
+                    courseDescription = "Aprende los fundamentos de Python desde cero hasta convertirte en un desarrollador competente."
+                )
+            }
+            
+            item {
+                // Progress Overview
+                ProgressOverview(
+                    progress = 33.3f,
+                    completedModules = 1,
+                    totalModules = 3
+                )
+            }
+            
+            item {
+                Text(
+                    text = "Módulos del curso",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+            }
+            
+            // Sample Modules for Preview
+            items(getSampleModulesForPreview()) { moduleWithProgress ->
+                ModuleItem(
+                    module = moduleWithProgress.module,
+                    progress = moduleWithProgress.progress,
+                    onClick = { }
+                )
+            }
+            
+            item {
+                Spacer(modifier = Modifier.height(80.dp))
+            }
+        }
+    }
+}
+
+@Composable
+private fun getSampleModulesForPreview(): List<com.example.kodelearn.data.repository.ModuleWithProgress> {
+    return listOf(
+        com.example.kodelearn.data.repository.ModuleWithProgress(
+            module = com.example.kodelearn.data.database.entities.Module(
+                id = 1,
+                courseId = 1,
+                name = "Python Básico",
+                description = "Fundamentos de Python: variables, tipos de datos y operadores básicos.",
+                totalLessons = 5,
+                order = 1,
+                isLocked = false,
+                xpReward = 50
+            ),
+            progress = com.example.kodelearn.data.database.entities.Progress(
+                id = 1,
+                userId = 1,
+                moduleId = 1,
+                lessonsCompleted = 2,
+                progressPercentage = 40f,
+                isCompleted = false
+            )
+        ),
+        com.example.kodelearn.data.repository.ModuleWithProgress(
+            module = com.example.kodelearn.data.database.entities.Module(
+                id = 2,
+                courseId = 1,
+                name = "Estructuras de Control",
+                description = "If/else, bucles for y while, manejo de flujo de control.",
+                totalLessons = 4,
+                order = 2,
+                isLocked = true,
+                xpReward = 40
+            ),
+            progress = null
+        ),
+        com.example.kodelearn.data.repository.ModuleWithProgress(
+            module = com.example.kodelearn.data.database.entities.Module(
+                id = 3,
+                courseId = 1,
+                name = "Funciones y Métodos",
+                description = "Definición de funciones, parámetros, return y scope.",
+                totalLessons = 6,
+                order = 3,
+                isLocked = true,
+                xpReward = 60
+            ),
+            progress = null
+        )
+    )
 }
