@@ -1,0 +1,19 @@
+Index: app/src/main/java/com/example/kodelearn/MainActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.kodelearn\r\n\r\nimport android.os.Bundle\r\nimport androidx.activity.ComponentActivity\r\nimport androidx.activity.compose.setContent\r\nimport androidx.activity.enableEdgeToEdge\r\nimport com.example.kodelearn.navigation.KodeLearnNavigation\r\nimport com.example.kodelearn.ui.theme.KodeLearnTheme\r\n\r\nclass MainActivity : ComponentActivity() {\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n        enableEdgeToEdge()\r\n        \r\n        val application = application as KodeLearnApplication\r\n        \r\n        setContent {\r\n            KodeLearnTheme {\r\n                KodeLearnNavigation(\r\n                    repository = application.repository\r\n                )\r\n            }\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/kodelearn/MainActivity.kt b/app/src/main/java/com/example/kodelearn/MainActivity.kt
+--- a/app/src/main/java/com/example/kodelearn/MainActivity.kt	(revision 635f898a8be20eb8e72fcf2ab9bf840cd051244b)
++++ b/app/src/main/java/com/example/kodelearn/MainActivity.kt	(date 1758069136027)
+@@ -10,7 +10,7 @@
+ class MainActivity : ComponentActivity() {
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+-        enableEdgeToEdge()
++        enableEdgeToEd ge()
+         
+         val application = application as KodeLearnApplication
+         
