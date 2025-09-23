@@ -33,6 +33,10 @@ import com.example.kodelearn.ui.screens.ProfileScreen
 import com.example.kodelearn.ui.screens.ProgressScreen
 import com.example.kodelearn.ui.screens.RegisterScreen
 import com.example.kodelearn.ui.screens.SettingsScreen
+import com.example.kodelearn.ui.screens.SimpleHomeScreen
+import com.example.kodelearn.ui.screens.SimpleLearningScreen
+import com.example.kodelearn.ui.screens.SimpleProgressScreen
+import com.example.kodelearn.ui.screens.SimpleProfileScreen
 import com.example.kodelearn.ui.screens.WelcomeScreen
 
 sealed class Screen(
@@ -62,6 +66,11 @@ fun KodeLearnNavigation(
 ) {
     val navController = rememberNavController()
     var isLoggedIn by remember { mutableStateOf(false) }
+    
+    // Mock user data - completely local
+    val mockUser = remember {
+        com.example.kodelearn.data.MockData.getDefaultUser()
+    }
     
     val mainAppItems = listOf(
         Screen.Home,
@@ -135,22 +144,20 @@ fun KodeLearnNavigation(
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable(Screen.Home.route) {
-                    HomeScreen(repository = repository)
+                    SimpleHomeScreen()
                 }
                 composable(Screen.Learning.route) {
-                    LearningScreen(
-                        repository = repository,
+                    SimpleLearningScreen(
                         onNavigateToLesson = {
                             navController.navigate(Screen.Lesson.route)
                         }
                     )
                 }
                 composable(Screen.Progress.route) {
-                    ProgressScreen(repository = repository)
+                    SimpleProgressScreen()
                 }
                 composable(Screen.Profile.route) {
-                    ProfileScreen(
-                        repository = repository,
+                    SimpleProfileScreen(
                         onNavigateToSettings = {
                             navController.navigate(Screen.Settings.route)
                         }

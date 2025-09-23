@@ -57,20 +57,12 @@ class LoginViewModel(
             return
         }
 
-        println("LoginViewModel: Starting login process")
-        _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = "")
-
-        // Simple delay to simulate network call
-        viewModelScope.launch {
-            kotlinx.coroutines.delay(500) // Small delay
-            
-            println("LoginViewModel: Login successful, setting isLoggedIn = true")
-            _uiState.value = _uiState.value.copy(
-                isLoading = false,
-                isLoggedIn = true,
-                errorMessage = ""
-            )
-        }
+        // Direct login - no coroutines, no delays, no database
+        _uiState.value = _uiState.value.copy(
+            isLoading = false,
+            isLoggedIn = true,
+            errorMessage = ""
+        )
     }
 
     private fun isValidInput(state: LoginUiState): Boolean {
