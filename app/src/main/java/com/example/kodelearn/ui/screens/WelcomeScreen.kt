@@ -68,7 +68,7 @@ private fun WelcomeHeader() {
         ) {
             Icon(
                 imageVector = Icons.Default.Code,
-                contentDescription = "KodeLearn Logo",
+                contentDescription = "Kódigo Logo",
                 tint = PrimaryGreen,
                 modifier = Modifier.size(60.dp)
             )
@@ -77,7 +77,7 @@ private fun WelcomeHeader() {
         Spacer(modifier = Modifier.height(24.dp))
         
         Text(
-            text = "KodeLearn",
+            text = "Kódigo",
             style = MaterialTheme.typography.displayMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground

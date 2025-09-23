@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">KodeLearn</string>
+    <string name="app_name">Kódigo</string>
     <string name="profile_tab">Perfil</string>
     <string name="learning_tab">Aprender</string>
     <string name="daily_streak">Racha diaria</string>

@@ -57,18 +57,26 @@ class LoginViewModel(
 
         viewModelScope.launch {
             try {
-                // For now, we'll just check if there's a user in the database
-                // In a real app, you'd validate credentials
+                // Validate credentials against database
                 repository.getAllUsers().collect { users ->
-                    if (users.isNotEmpty()) {
-                        // User exists, login successful
+                    val user = users.find { it.email == email }
+                    
+                    if (user != null && user.password == password) {
+                        // Credentials match, login successful
                         _uiState.value = _uiState.value.copy(
                             isLoading = false,
                             isLoggedIn = true,
                             errorMessage = ""
                         )
+                    } else if (user != null) {
+                        // User exists but wrong password
+                        _uiState.value = _uiState.value.copy(
+                            isLoading = false,
+                            errorMessage = "Contraseña incorrecta",
+                            isLoggedIn = false
+                        )
                     } else {
-                        // No user found
+                        // No user found with this email
                         _uiState.value = _uiState.value.copy(
                             isLoading = false,
                             errorMessage = "No se encontró una cuenta con este correo. Regístrate primero.",
