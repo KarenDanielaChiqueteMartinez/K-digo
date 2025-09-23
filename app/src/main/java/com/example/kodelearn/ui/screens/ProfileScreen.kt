@@ -101,21 +101,6 @@ fun ProfileScreen(
                 )
             }
             
-            Spacer(modifier = Modifier.height(12.dp))
-            
-            StatCard(
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.EmojiEvents,
-                        contentDescription = "League",
-                        tint = WoodenLeague,
-                        modifier = Modifier.size(24.dp)
-                    )
-                },
-                value = uiState.user?.league ?: "Wooden",
-                label = "Liga",
-                iconColor = WoodenLeague
-            )
         }
         
         item {
@@ -134,13 +119,6 @@ fun ProfileScreen(
                             modifier = Modifier.size(20.dp)
                         )
                     }
-                )
-                
-                KodeLearnButton(
-                    text = "Prueba PRO Gratis",
-                    onClick = { /* TODO: Navigate to PRO screen */ },
-                    modifier = Modifier.fillMaxWidth(),
-                    variant = com.example.kodelearn.ui.components.ButtonVariant.Secondary
                 )
             }
         }
