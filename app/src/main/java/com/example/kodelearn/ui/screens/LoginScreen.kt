@@ -36,11 +36,12 @@ fun LoginScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     
-    // Handle successful login - Direct approach
+    // Handle successful login
     LaunchedEffect(uiState.isLoggedIn) {
         if (uiState.isLoggedIn) {
-            println("LoginScreen: Login successful, calling onLoginSuccess")
             onLoginSuccess()
+            // Reset the login state to prevent multiple triggers
+            viewModel.clearLoginState()
         }
     }
     

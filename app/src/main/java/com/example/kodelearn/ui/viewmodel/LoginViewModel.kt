@@ -49,26 +49,29 @@ class LoginViewModel(
     fun loginUser() {
         val currentState = _uiState.value
         
-        // Simple validation
-        if (currentState.email.trim().isEmpty() || currentState.password.isEmpty()) {
-            _uiState.value = _uiState.value.copy(
-                errorMessage = "Email y contraseña son requeridos"
-            )
+        // Validation
+        if (!isValidInput(currentState)) {
             return
         }
 
-        println("LoginViewModel: Starting login process")
         _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = "")
 
-        // Simple delay to simulate network call
-        viewModelScope.launch {
-            kotlinx.coroutines.delay(500) // Small delay
-            
-            println("LoginViewModel: Login successful, setting isLoggedIn = true")
+        // Simulate login validation with local data
+        val email = currentState.email.trim()
+        val password = currentState.password
+
+        // For testing: accept any email/password combination
+        if (email.isNotEmpty() && password.isNotEmpty()) {
             _uiState.value = _uiState.value.copy(
                 isLoading = false,
                 isLoggedIn = true,
                 errorMessage = ""
+            )
+        } else {
+            _uiState.value = _uiState.value.copy(
+                isLoading = false,
+                errorMessage = "Email y contraseña son requeridos",
+                isLoggedIn = false
             )
         }
     }
