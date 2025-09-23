@@ -19,8 +19,8 @@ object MockData {
     fun getDefaultCourses() = listOf(
         Course(
             id = 1,
-            name = "Python",
-            description = "Aprende los fundamentos de Python desde cero hasta convertirte en un desarrollador competente.",
+            name = "Programación",
+            description = "Aprende los fundamentos de programación desde cero hasta convertirte en un desarrollador competente.",
             iconUrl = "",
             totalModules = 11,
             isLocked = false
@@ -44,12 +44,12 @@ object MockData {
     )
     
     fun getDefaultModules() = listOf(
-        // Python Modules - Structured Learning Path
+        // Programming Modules - Structured Learning Path
         Module(
             id = 1,
             courseId = 1,
             name = "Introducción a la Sintaxis Básica",
-            description = "Aprende los fundamentos de la sintaxis de Python: indentación, comentarios y estructura básica.",
+            description = "Aprende los fundamentos de la sintaxis de programación: indentación, comentarios y estructura básica.",
             totalLessons = 4,
             order = 1,
             isLocked = false,
@@ -59,7 +59,7 @@ object MockData {
             id = 2,
             courseId = 1,
             name = "Declaración de Variables y Tipos de Datos",
-            description = "Domina cómo declarar variables y trabajar con diferentes tipos de datos en Python.",
+            description = "Domina cómo declarar variables y trabajar con diferentes tipos de datos en programación.",
             totalLessons = 5,
             order = 2,
             isLocked = true,
@@ -69,7 +69,7 @@ object MockData {
             id = 3,
             courseId = 1,
             name = "Operadores",
-            description = "Aprende a usar operadores aritméticos, de comparación y lógicos en Python.",
+            description = "Aprende a usar operadores aritméticos, de comparación y lógicos en programación.",
             totalLessons = 4,
             order = 3,
             isLocked = true,
@@ -79,7 +79,7 @@ object MockData {
             id = 4,
             courseId = 1,
             name = "Estructuras de Control",
-            description = "Comprende el flujo de control básico en programación con Python.",
+            description = "Comprende el flujo de control básico en programación.",
             totalLessons = 3,
             order = 4,
             isLocked = true,
