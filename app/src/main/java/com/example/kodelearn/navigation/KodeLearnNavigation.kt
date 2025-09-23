@@ -70,6 +70,9 @@ fun KodeLearnNavigation(
         Screen.Profile
     )
 
+    // Debug log
+    println("KodeLearnNavigation: isLoggedIn = $isLoggedIn")
+    
     if (isLoggedIn) {
         // Main App with Bottom Navigation
         Scaffold(
