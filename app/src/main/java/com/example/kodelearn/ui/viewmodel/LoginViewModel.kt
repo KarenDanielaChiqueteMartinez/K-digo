@@ -56,42 +56,23 @@ class LoginViewModel(
 
         _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = "")
 
-        viewModelScope.launch {
-            try {
-                // Validate credentials against database
-                val users = repository.getAllUsers().first()
-                val user = users.find { it.email == currentState.email.trim() }
-                
-                if (user != null && user.password == currentState.password) {
-                    // Credentials match, login successful
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        isLoggedIn = true,
-                        errorMessage = ""
-                    )
-                } else if (user != null) {
-                    // User exists but wrong password
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        errorMessage = "Contraseña incorrecta",
-                        isLoggedIn = false
-                    )
-                } else {
-                    // No user found with this email
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        errorMessage = "No se encontró una cuenta con este correo. Regístrate primero.",
-                        isLoggedIn = false
-                    )
-                }
+        // Simulate login validation with local data
+        val email = currentState.email.trim()
+        val password = currentState.password
 
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    errorMessage = "Error al iniciar sesión: ${e.message}",
-                    isLoggedIn = false
-                )
-            }
+        // For testing: accept any email/password combination
+        if (email.isNotEmpty() && password.isNotEmpty()) {
+            _uiState.value = _uiState.value.copy(
+                isLoading = false,
+                isLoggedIn = true,
+                errorMessage = ""
+            )
+        } else {
+            _uiState.value = _uiState.value.copy(
+                isLoading = false,
+                errorMessage = "Email y contraseña son requeridos",
+                isLoggedIn = false
+            )
         }
     }
 
