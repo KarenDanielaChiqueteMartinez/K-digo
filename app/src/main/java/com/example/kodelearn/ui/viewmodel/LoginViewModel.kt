@@ -56,46 +56,12 @@ class LoginViewModel(
 
         _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = "")
 
-        viewModelScope.launch {
-            try {
-                val email = currentState.email.trim()
-                val password = currentState.password
-                
-                // Validate credentials against database
-                val users = repository.getAllUsers().first()
-                val user = users.find { it.email == email }
-                
-                if (user != null && user.password == password) {
-                    // Credentials match, login successful
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        isLoggedIn = true,
-                        errorMessage = ""
-                    )
-                } else if (user != null) {
-                    // User exists but wrong password
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        errorMessage = "Contraseña incorrecta",
-                        isLoggedIn = false
-                    )
-                } else {
-                    // No user found with this email
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        errorMessage = "No se encontró una cuenta con este correo. Regístrate primero.",
-                        isLoggedIn = false
-                    )
-                }
-
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    errorMessage = "Error al iniciar sesión: ${e.message}",
-                    isLoggedIn = false
-                )
-            }
-        }
+        // For now, just simulate successful login
+        _uiState.value = _uiState.value.copy(
+            isLoading = false,
+            isLoggedIn = true,
+            errorMessage = ""
+        )
     }
 
     private fun isValidInput(state: LoginUiState): Boolean {
