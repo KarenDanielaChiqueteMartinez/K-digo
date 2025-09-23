@@ -17,6 +17,7 @@ class KodeLearnRepository(
 ) {
     // User operations
     fun getCurrentUser(): Flow<User?> = userDao.getCurrentUser()
+    fun getAllUsers(): Flow<List<User>> = userDao.getAllUsers()
     
     suspend fun insertUser(user: User) = userDao.insertUser(user)
     suspend fun updateUser(user: User) = userDao.updateUser(user)

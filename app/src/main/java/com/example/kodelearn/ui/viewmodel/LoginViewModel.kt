@@ -59,22 +59,22 @@ class LoginViewModel(
             try {
                 // For now, we'll just check if there's a user in the database
                 // In a real app, you'd validate credentials
-                val users = repository.getAllUsers()
-                
-                if (users.isNotEmpty()) {
-                    // User exists, login successful
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        isLoggedIn = true,
-                        errorMessage = ""
-                    )
-                } else {
-                    // No user found
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        errorMessage = "No se encontró una cuenta con este correo. Regístrate primero.",
-                        isLoggedIn = false
-                    )
+                repository.getAllUsers().collect { users ->
+                    if (users.isNotEmpty()) {
+                        // User exists, login successful
+                        _uiState.value = _uiState.value.copy(
+                            isLoading = false,
+                            isLoggedIn = true,
+                            errorMessage = ""
+                        )
+                    } else {
+                        // No user found
+                        _uiState.value = _uiState.value.copy(
+                            isLoading = false,
+                            errorMessage = "No se encontró una cuenta con este correo. Regístrate primero.",
+                            isLoggedIn = false
+                        )
+                    }
                 }
 
             } catch (e: Exception) {
