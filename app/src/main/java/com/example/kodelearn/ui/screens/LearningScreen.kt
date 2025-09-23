@@ -15,8 +15,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kodelearn.data.repository.KodeLearnRepository
 import com.example.kodelearn.ui.components.LearningTopBar
 import com.example.kodelearn.ui.components.ModuleItem
-import com.example.kodelearn.ui.components.WormModulePath
-import com.example.kodelearn.ui.components.ModulePreviewDialog
 import com.example.kodelearn.ui.theme.KodeLearnTheme
 import com.example.kodelearn.ui.viewmodel.LearningViewModel
 
@@ -28,8 +26,6 @@ fun LearningScreen(
     viewModel: LearningViewModel = viewModel(factory = LearningViewModel.factory(repository))
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var showPreviewDialog by remember { mutableStateOf(false) }
-    var selectedModule by remember { mutableStateOf<com.example.kodelearn.data.database.entities.Module?>(null) }
     
     if (uiState.isLoading) {
         Box(
@@ -96,18 +92,13 @@ fun LearningScreen(
                 )
             }
             
-            // Worm Module Path
-            item {
-                WormModulePath(
-                    modules = uiState.modulesWithProgress,
-                    onModuleClick = { module ->
-                        if (!module.isLocked) {
-                            onNavigateToLesson()
-                        }
-                    },
-                    onModulePreview = { module ->
-                        selectedModule = module
-                        showPreviewDialog = true
+            // Modules List
+            items(uiState.modulesWithProgress) { moduleWithProgress ->
+                ModuleItem(
+                    module = moduleWithProgress.module,
+                    progress = moduleWithProgress.progress,
+                    onClick = {
+                        onNavigateToLesson()
                     }
                 )
             }
@@ -116,22 +107,6 @@ fun LearningScreen(
                 Spacer(modifier = Modifier.height(80.dp)) // Space for bottom navigation
             }
         }
-    }
-    
-    // Module Preview Dialog
-    selectedModule?.let { module ->
-        ModulePreviewDialog(
-            module = module,
-            onDismiss = { 
-                showPreviewDialog = false
-                selectedModule = null
-            },
-            onStart = {
-                showPreviewDialog = false
-                selectedModule = null
-                onNavigateToLesson()
-            }
-        )
     }
 }
 
