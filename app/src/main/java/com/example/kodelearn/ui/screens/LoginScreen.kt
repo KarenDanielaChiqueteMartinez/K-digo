@@ -39,9 +39,12 @@ fun LoginScreen(
     // Handle successful login
     LaunchedEffect(uiState.isLoggedIn) {
         if (uiState.isLoggedIn) {
-            onLoginSuccess()
-            // Reset the login state to prevent multiple triggers
-            viewModel.clearLoginState()
+            try {
+                onLoginSuccess()
+            } catch (e: Exception) {
+                // Log error but don't crash
+                println("Error in login success: ${e.message}")
+            }
         }
     }
     

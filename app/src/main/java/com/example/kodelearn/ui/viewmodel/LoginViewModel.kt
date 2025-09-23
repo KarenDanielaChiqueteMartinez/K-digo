@@ -114,12 +114,6 @@ class LoginViewModel(
         )
     }
 
-    fun clearLoginState() {
-        _uiState.value = _uiState.value.copy(
-            isLoggedIn = false
-        )
-    }
-
     companion object {
         fun factory(repository: KodeLearnRepository): ViewModelProvider.Factory {
             return object : ViewModelProvider.Factory {
