@@ -55,8 +55,8 @@ class LoginViewModel(
 
         _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = "")
 
-        val email = state.email.trim()
-        val password = state.password
+        val email = currentState.email.trim()
+        val password = currentState.password
 
         viewModelScope.launch {
             try {
