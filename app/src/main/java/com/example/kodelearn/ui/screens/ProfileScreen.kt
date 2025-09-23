@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
@@ -32,6 +33,7 @@ import com.example.kodelearn.ui.viewmodel.ProfileViewModel
 @Composable
 fun ProfileScreen(
     repository: KodeLearnRepository,
+    onNavigateToSettings: () -> Unit = {},
     modifier: Modifier = Modifier,
     viewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.factory(repository))
 ) {
@@ -49,7 +51,8 @@ fun ProfileScreen(
             ProfileHeader(
                 name = uiState.user?.name ?: "Usuario",
                 biography = uiState.user?.biography ?: "",
-                onBiographyChanged = { viewModel.updateBiography(it) }
+                onBiographyChanged = { viewModel.updateBiography(it) },
+                onNavigateToSettings = onNavigateToSettings
             )
         }
         
@@ -153,7 +156,8 @@ fun ProfileScreen(
 private fun ProfileHeader(
     name: String,
     biography: String,
-    onBiographyChanged: (String) -> Unit
+    onBiographyChanged: (String) -> Unit,
+    onNavigateToSettings: () -> Unit = {}
 ) {
     var isEditingBio by remember { mutableStateOf(false) }
     var bioText by remember { mutableStateOf(biography) }
@@ -166,12 +170,30 @@ private fun ProfileHeader(
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+        Box(
+            modifier = Modifier.fillMaxWidth()
         ) {
+            // Settings Icon - Top Right
+            IconButton(
+                onClick = onNavigateToSettings,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = "Ajustes",
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+            
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
             // Avatar
             Box(
                 modifier = Modifier
@@ -244,6 +266,7 @@ private fun ProfileHeader(
                         else MaterialTheme.colorScheme.onSurface
                     )
                 }
+            }
             }
         }
     }

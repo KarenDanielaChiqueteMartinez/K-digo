@@ -31,6 +31,7 @@ import com.example.kodelearn.ui.screens.LoginScreen
 import com.example.kodelearn.ui.screens.ProfileScreen
 import com.example.kodelearn.ui.screens.ProgressScreen
 import com.example.kodelearn.ui.screens.RegisterScreen
+import com.example.kodelearn.ui.screens.SettingsScreen
 import com.example.kodelearn.ui.screens.WelcomeScreen
 
 sealed class Screen(
@@ -49,6 +50,7 @@ sealed class Screen(
     object Learning : Screen("learning", "Aprender", Icons.Filled.School, Icons.Outlined.School)
     object Progress : Screen("progress", "Progreso", Icons.Filled.TrendingUp, Icons.Outlined.TrendingUp)
     object Profile : Screen("profile", "Perfil", Icons.Filled.Person, Icons.Outlined.Person)
+    object Settings : Screen("settings", "Ajustes")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -137,7 +139,19 @@ fun KodeLearnNavigation(
                     ProgressScreen(repository = repository)
                 }
                 composable(Screen.Profile.route) {
-                    ProfileScreen(repository = repository)
+                    ProfileScreen(
+                        repository = repository,
+                        onNavigateToSettings = {
+                            navController.navigate(Screen.Settings.route)
+                        }
+                    )
+                }
+                composable(Screen.Settings.route) {
+                    SettingsScreen(
+                        onNavigateBack = {
+                            navController.popBackStack()
+                        }
+                    )
                 }
             }
         }
