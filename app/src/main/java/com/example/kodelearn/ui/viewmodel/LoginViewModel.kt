@@ -55,13 +55,16 @@ class LoginViewModel(
 
         _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = "")
 
+        val email = state.email.trim()
+        val password = state.password
+
         viewModelScope.launch {
             try {
                 // Validate credentials against database
                 repository.getAllUsers().collect { users ->
-                    val user = users.find { it.email == state.email.trim() }
+                    val user = users.find { it.email == email }
                     
-                    if (user != null && user.password == state.password) {
+                    if (user != null && user.password == password) {
                         // Credentials match, login successful
                         _uiState.value = _uiState.value.copy(
                             isLoading = false,
