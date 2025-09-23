@@ -163,9 +163,7 @@ fun KodeLearnNavigation(
                     repository = repository,
                     onLoginSuccess = {
                         isLoggedIn = true
-                        navController.navigate(Screen.Learning.route) {
-                            popUpTo(Screen.Welcome.route) { inclusive = true }
-                        }
+                        // No need to navigate, the UI will switch to main app
                     },
                     onNavigateToRegister = {
                         navController.navigate(Screen.Register.route)
@@ -178,9 +176,7 @@ fun KodeLearnNavigation(
                     repository = repository,
                     onRegisterSuccess = {
                         isLoggedIn = true
-                        navController.navigate(Screen.Learning.route) {
-                            popUpTo(Screen.Welcome.route) { inclusive = true }
-                        }
+                        // No need to navigate, the UI will switch to main app
                     }
                 )
             }

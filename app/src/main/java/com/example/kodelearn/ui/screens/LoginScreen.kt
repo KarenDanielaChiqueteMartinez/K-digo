@@ -39,7 +39,12 @@ fun LoginScreen(
     // Handle successful login
     LaunchedEffect(uiState.isLoggedIn) {
         if (uiState.isLoggedIn) {
-            onLoginSuccess()
+            try {
+                onLoginSuccess()
+            } catch (e: Exception) {
+                // Log error but don't crash
+                println("Error in login success: ${e.message}")
+            }
         }
     }
     
