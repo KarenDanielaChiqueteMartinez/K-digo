@@ -27,6 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.kodelearn.data.repository.KodeLearnRepository
 import com.example.kodelearn.ui.screens.HomeScreen
 import com.example.kodelearn.ui.screens.LearningScreen
+import com.example.kodelearn.ui.screens.LessonScreen
 import com.example.kodelearn.ui.screens.LoginScreen
 import com.example.kodelearn.ui.screens.ProfileScreen
 import com.example.kodelearn.ui.screens.ProgressScreen
@@ -51,6 +52,7 @@ sealed class Screen(
     object Progress : Screen("progress", "Progreso", Icons.Filled.TrendingUp, Icons.Outlined.TrendingUp)
     object Profile : Screen("profile", "Perfil", Icons.Filled.Person, Icons.Outlined.Person)
     object Settings : Screen("settings", "Ajustes")
+    object Lesson : Screen("lesson", "Lección")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -133,7 +135,12 @@ fun KodeLearnNavigation(
                     HomeScreen(repository = repository)
                 }
                 composable(Screen.Learning.route) {
-                    LearningScreen(repository = repository)
+                    LearningScreen(
+                        repository = repository,
+                        onNavigateToLesson = {
+                            navController.navigate(Screen.Lesson.route)
+                        }
+                    )
                 }
                 composable(Screen.Progress.route) {
                     ProgressScreen(repository = repository)
@@ -149,6 +156,16 @@ fun KodeLearnNavigation(
                 composable(Screen.Settings.route) {
                     SettingsScreen(
                         onNavigateBack = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
+                composable(Screen.Lesson.route) {
+                    LessonScreen(
+                        onNavigateBack = {
+                            navController.popBackStack()
+                        },
+                        onLessonComplete = {
                             navController.popBackStack()
                         }
                     )

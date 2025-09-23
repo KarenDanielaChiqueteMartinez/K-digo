@@ -21,6 +21,7 @@ import com.example.kodelearn.ui.viewmodel.LearningViewModel
 @Composable
 fun LearningScreen(
     repository: KodeLearnRepository,
+    onNavigateToLesson: () -> Unit = {},
     modifier: Modifier = Modifier,
     viewModel: LearningViewModel = viewModel(factory = LearningViewModel.factory(repository))
 ) {
@@ -97,7 +98,7 @@ fun LearningScreen(
                     module = moduleWithProgress.module,
                     progress = moduleWithProgress.progress,
                     onClick = {
-                        viewModel.startModule(moduleWithProgress.module.id)
+                        onNavigateToLesson()
                     }
                 )
             }
