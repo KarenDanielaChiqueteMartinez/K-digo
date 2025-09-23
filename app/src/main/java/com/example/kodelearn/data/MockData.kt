@@ -22,7 +22,7 @@ object MockData {
             name = "Python",
             description = "Aprende los fundamentos de Python desde cero hasta convertirte en un desarrollador competente.",
             iconUrl = "",
-            totalModules = 3,
+            totalModules = 11,
             isLocked = false
         ),
         Course(
@@ -44,66 +44,136 @@ object MockData {
     )
     
     fun getDefaultModules() = listOf(
-        // Python Modules
+        // Python Modules - Structured Learning Path
         Module(
             id = 1,
             courseId = 1,
-            name = "Python Básico",
-            description = "Fundamentos de Python: variables, tipos de datos y operadores básicos.",
-            totalLessons = 5,
+            name = "Introducción a la Sintaxis Básica",
+            description = "Aprende los fundamentos de la sintaxis de Python: indentación, comentarios y estructura básica.",
+            totalLessons = 4,
             order = 1,
             isLocked = false,
-            xpReward = 50
+            xpReward = 40
         ),
         Module(
             id = 2,
             courseId = 1,
-            name = "Estructuras de Control",
-            description = "If/else, bucles for y while, manejo de flujo de control.",
-            totalLessons = 4,
+            name = "Declaración de Variables y Tipos de Datos",
+            description = "Domina cómo declarar variables y trabajar con diferentes tipos de datos en Python.",
+            totalLessons = 5,
             order = 2,
             isLocked = true,
-            xpReward = 40
+            xpReward = 50
         ),
         Module(
             id = 3,
             courseId = 1,
-            name = "Funciones y Métodos",
-            description = "Definición de funciones, parámetros, return y scope.",
-            totalLessons = 6,
+            name = "Operadores",
+            description = "Aprende a usar operadores aritméticos, de comparación y lógicos en Python.",
+            totalLessons = 4,
             order = 3,
             isLocked = true,
+            xpReward = 40
+        ),
+        Module(
+            id = 4,
+            courseId = 1,
+            name = "Estructuras de Control",
+            description = "Comprende el flujo de control básico en programación con Python.",
+            totalLessons = 3,
+            order = 4,
+            isLocked = true,
+            xpReward = 30
+        ),
+        Module(
+            id = 5,
+            courseId = 1,
+            name = "Condicionales (if/else)",
+            description = "Aprende a tomar decisiones en tu código usando condicionales if, elif y else.",
+            totalLessons = 5,
+            order = 5,
+            isLocked = true,
+            xpReward = 50
+        ),
+        Module(
+            id = 6,
+            courseId = 1,
+            name = "Ciclos (for/while)",
+            description = "Domina los bucles for y while para repetir código de manera eficiente.",
+            totalLessons = 6,
+            order = 6,
+            isLocked = true,
             xpReward = 60
+        ),
+        Module(
+            id = 7,
+            courseId = 1,
+            name = "Funciones y Procedimientos",
+            description = "Aprende a crear y usar funciones para organizar y reutilizar tu código.",
+            totalLessons = 7,
+            order = 7,
+            isLocked = true,
+            xpReward = 70
+        ),
+        Module(
+            id = 8,
+            courseId = 1,
+            name = "Modularidad y Reutilización",
+            description = "Organiza tu código en módulos y aprende las mejores prácticas de reutilización.",
+            totalLessons = 4,
+            order = 8,
+            isLocked = true,
+            xpReward = 40
+        ),
+        Module(
+            id = 9,
+            courseId = 1,
+            name = "Estructuras de Datos",
+            description = "Explora las estructuras de datos fundamentales: listas, tuplas, diccionarios y conjuntos.",
+            totalLessons = 8,
+            order = 9,
+            isLocked = true,
+            xpReward = 80
+        ),
+        Module(
+            id = 10,
+            courseId = 1,
+            name = "Arreglos y Listas",
+            description = "Profundiza en el manejo de listas y arreglos para almacenar y manipular datos.",
+            totalLessons = 6,
+            order = 10,
+            isLocked = true,
+            xpReward = 60
+        ),
+        Module(
+            id = 11,
+            courseId = 1,
+            name = "Entrada y Salida de Datos",
+            description = "Aprende a recibir datos del usuario y mostrar información en pantalla.",
+            totalLessons = 5,
+            order = 11,
+            isLocked = true,
+            xpReward = 50
         ),
         
         // JavaScript Modules (locked course)
         Module(
-            id = 4,
+            id = 12,
             courseId = 2,
             name = "JavaScript Básico",
-            description = "Variables, tipos de datos y operadores en JavaScript.",
+            description = "Fundamentos de JavaScript para desarrollo web.",
             totalLessons = 5,
             order = 1,
             isLocked = true,
             xpReward = 50
         ),
-        Module(
-            id = 5,
-            courseId = 2,
-            name = "DOM Manipulation",
-            description = "Interacción con elementos HTML desde JavaScript.",
-            totalLessons = 7,
-            order = 2,
-            isLocked = true,
-            xpReward = 70
-        ),
         
         // Kotlin Modules (locked course)
         Module(
-            id = 6,
+            id = 13,
             courseId = 3,
             name = "Kotlin Básico",
-            description = "Sintaxis básica de Kotlin para Android.",
+            description = "Sintaxis básica de Kotlin para desarrollo Android.",
             totalLessons = 6,
             order = 1,
             isLocked = true,

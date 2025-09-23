@@ -25,9 +25,10 @@ import com.example.kodelearn.ui.theme.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LessonScreen(
-    moduleTitle: String = "Python Básico",
+    moduleId: Int = 1,
+    moduleTitle: String = "Introducción a la Sintaxis Básica",
     lessonNumber: Int = 1,
-    totalLessons: Int = 3,
+    totalLessons: Int = 4,
     onNavigateBack: () -> Unit = {},
     onLessonComplete: () -> Unit = {},
     modifier: Modifier = Modifier
@@ -37,33 +38,7 @@ fun LessonScreen(
     var isCompleted by remember { mutableStateOf(false) }
     
     val exercises = remember {
-        listOf(
-            ExerciseData(
-                type = ExerciseType.MULTIPLE_CHOICE,
-                question = "¿Cuál es la forma correcta de imprimir 'Hola Mundo' en Python?",
-                options = listOf(
-                    "print('Hola Mundo')",
-                    "echo('Hola Mundo')",
-                    "console.log('Hola Mundo')",
-                    "System.out.println('Hola Mundo')"
-                ),
-                correctAnswer = 0,
-                explanation = "En Python usamos la función print() para mostrar texto en pantalla."
-            ),
-            ExerciseData(
-                type = ExerciseType.CODE_COMPLETION,
-                question = "Completa el código para crear una variable llamada 'nombre':",
-                code = "nombre = \"___\"",
-                correctAnswer = "Juan",
-                explanation = "Las variables en Python se crean asignando un valor con el operador ="
-            ),
-            ExerciseData(
-                type = ExerciseType.TRUE_FALSE,
-                question = "En Python, las variables no necesitan ser declaradas antes de usarse.",
-                correctAnswer = true,
-                explanation = "Python es un lenguaje de tipado dinámico, no necesitas declarar variables."
-            )
-        )
+        getExercisesForModule(moduleId)
     }
     
     Column(
@@ -450,6 +425,146 @@ enum class ExerciseType {
     MULTIPLE_CHOICE,
     CODE_COMPLETION,
     TRUE_FALSE
+}
+
+// Function to get exercises based on module ID
+private fun getExercisesForModule(moduleId: Int): List<ExerciseData> {
+    return when (moduleId) {
+        1 -> listOf( // Introducción a la Sintaxis Básica
+            ExerciseData(
+                type = ExerciseType.MULTIPLE_CHOICE,
+                question = "¿Cuál es la forma correcta de imprimir 'Hola Mundo' en Python?",
+                options = listOf(
+                    "print('Hola Mundo')",
+                    "echo('Hola Mundo')",
+                    "console.log('Hola Mundo')",
+                    "System.out.println('Hola Mundo')"
+                ),
+                correctAnswer = 0,
+                explanation = "En Python usamos la función print() para mostrar texto en pantalla."
+            ),
+            ExerciseData(
+                type = ExerciseType.CODE_COMPLETION,
+                question = "Completa el código para crear un comentario en Python:",
+                code = "# ___",
+                correctAnswer = "Este es un comentario",
+                explanation = "En Python, los comentarios de una línea comienzan con el símbolo #"
+            ),
+            ExerciseData(
+                type = ExerciseType.TRUE_FALSE,
+                question = "En Python, la indentación es importante para la estructura del código.",
+                correctAnswer = true,
+                explanation = "Python usa la indentación para definir bloques de código, a diferencia de otros lenguajes que usan llaves."
+            ),
+            ExerciseData(
+                type = ExerciseType.MULTIPLE_CHOICE,
+                question = "¿Cuál es la extensión de archivo para código Python?",
+                options = listOf(
+                    ".py",
+                    ".python",
+                    ".pyt",
+                    ".pyc"
+                ),
+                correctAnswer = 0,
+                explanation = "Los archivos de Python tienen la extensión .py"
+            )
+        )
+        2 -> listOf( // Declaración de Variables y Tipos de Datos
+            ExerciseData(
+                type = ExerciseType.CODE_COMPLETION,
+                question = "Declara una variable llamada 'edad' con el valor 25:",
+                code = "___ = 25",
+                correctAnswer = "edad",
+                explanation = "En Python, las variables se declaran asignando un valor con el operador ="
+            ),
+            ExerciseData(
+                type = ExerciseType.MULTIPLE_CHOICE,
+                question = "¿Cuál es el tipo de dato de la variable: nombre = 'Ana'?",
+                options = listOf(
+                    "str (string)",
+                    "int (entero)",
+                    "float (decimal)",
+                    "bool (booleano)"
+                ),
+                correctAnswer = 0,
+                explanation = "Las cadenas de texto en Python son del tipo 'str' (string)"
+            ),
+            ExerciseData(
+                type = ExerciseType.TRUE_FALSE,
+                question = "En Python, una variable puede cambiar de tipo de dato durante la ejecución.",
+                correctAnswer = true,
+                explanation = "Python es de tipado dinámico, las variables pueden cambiar de tipo."
+            ),
+            ExerciseData(
+                type = ExerciseType.CODE_COMPLETION,
+                question = "Crea una variable booleana llamada 'activo' con valor True:",
+                code = "activo = ___",
+                correctAnswer = "True",
+                explanation = "Los valores booleanos en Python son True y False (con mayúscula inicial)"
+            ),
+            ExerciseData(
+                type = ExerciseType.MULTIPLE_CHOICE,
+                question = "¿Cuál es el resultado de: type(3.14)?",
+                options = listOf(
+                    "<class 'float'>",
+                    "<class 'int'>",
+                    "<class 'str'>",
+                    "<class 'bool'>"
+                ),
+                correctAnswer = 0,
+                explanation = "Los números decimales en Python son del tipo 'float'"
+            )
+        )
+        3 -> listOf( // Operadores
+            ExerciseData(
+                type = ExerciseType.CODE_COMPLETION,
+                question = "¿Cuál es el resultado de: 10 // 3?",
+                code = "resultado = 10 // 3  # resultado = ___",
+                correctAnswer = "3",
+                explanation = "El operador // realiza división entera, descartando la parte decimal"
+            ),
+            ExerciseData(
+                type = ExerciseType.MULTIPLE_CHOICE,
+                question = "¿Cuál operador se usa para obtener el resto de una división?",
+                options = listOf(
+                    "%",
+                    "//",
+                    "/",
+                    "mod"
+                ),
+                correctAnswer = 0,
+                explanation = "El operador % (módulo) devuelve el resto de una división"
+            ),
+            ExerciseData(
+                type = ExerciseType.TRUE_FALSE,
+                question = "En Python, 5 == 5.0 devuelve True.",
+                correctAnswer = true,
+                explanation = "Python considera que 5 y 5.0 son iguales en valor, aunque sean tipos diferentes"
+            ),
+            ExerciseData(
+                type = ExerciseType.CODE_COMPLETION,
+                question = "Completa la comparación: 7 ___ 5",
+                code = "7 ___ 5  # ¿Qué operador usar para 'mayor que'?",
+                correctAnswer = ">",
+                explanation = "El operador > se usa para comparar si un número es mayor que otro"
+            )
+        )
+        // Add more modules as needed...
+        else -> listOf(
+            ExerciseData(
+                type = ExerciseType.MULTIPLE_CHOICE,
+                question = "¿Cuál es la forma correcta de imprimir 'Hola Mundo' en Python?",
+                options = listOf(
+                    "print('Hola Mundo')",
+                    "echo('Hola Mundo')",
+                    "console.log('Hola Mundo')",
+                    "System.out.println('Hola Mundo')"
+                ),
+                correctAnswer = 0,
+                explanation = "En Python usamos la función print() para mostrar texto en pantalla."
+            )
+        )
+    }
 }
 
 @Preview(showBackground = true)
