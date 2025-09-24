@@ -4,6 +4,8 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -75,47 +77,91 @@ fun ModulePath(
         }
     }
     
-    Box(
+    Column(
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 400.dp)
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
+            .padding(16.dp)
     ) {
-        Canvas(
-            modifier = Modifier.fillMaxSize()
+        // Horizontal scrollable path
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(horizontal = 8.dp)
         ) {
-            drawWormPath(
+            items(modules.size) { index ->
+                val moduleWithProgress = modules[index]
+                val animationValue = if (index < moduleAnimations.size) moduleAnimations[index].value else 1f
+                
+                PathModule(
+                    moduleWithProgress = moduleWithProgress,
+                    onClick = { onModuleClick(moduleWithProgress) },
+                    animationValue = animationValue,
+                    responsiveDimensions = responsiveDimensions,
+                    modifier = Modifier
+                )
+            }
+        }
+        
+        // Connection line below modules
+        Spacer(modifier = Modifier.height(20.dp))
+        
+        Canvas(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(4.dp)
+        ) {
+            drawHorizontalPath(
                 modules = modules,
-                screenWidth = screenWidth,
-                screenHeight = size.height,
+                screenWidth = size.width,
                 animationOffset = animationOffset
             )
         }
+    }
+}
+
+private fun DrawScope.drawHorizontalPath(
+    modules: List<ModuleWithProgress>,
+    screenWidth: Float,
+    animationOffset: Float
+) {
+    if (modules.isEmpty()) return
+    
+    // Draw animated connection line
+    val pathPaint = Paint().apply {
+        color = PathColor.copy(alpha = 0.6f)
+        style = PaintingStyle.Stroke
+        strokeWidth = 4.dp.toPx()
+        pathEffect = PathEffect.dashPathEffect(
+            floatArrayOf(15f, 8f),
+            animationOffset * 25f
+        )
+    }
+    
+    // Draw horizontal line
+    drawLine(
+        start = Offset(0f, size.height / 2),
+        end = Offset(screenWidth, size.height / 2),
+        paint = pathPaint
+    )
+    
+    // Draw connection dots for each module
+    val dotSpacing = screenWidth / modules.size
+    modules.forEachIndexed { index, _ ->
+        val x = (index * dotSpacing) + (dotSpacing / 2)
         
-        // Draw modules along the path
-        modules.forEachIndexed { index, moduleWithProgress ->
-            val position = calculateModulePosition(
-                index = index,
-                totalModules = modules.size,
-                screenWidth = screenWidth,
-                screenHeight = screenHeight,
-                responsiveDimensions = responsiveDimensions
-            )
-            
-            val animationValue = if (index < moduleAnimations.size) moduleAnimations[index].value else 1f
-            
-            PathModule(
-                moduleWithProgress = moduleWithProgress,
-                onClick = { onModuleClick(moduleWithProgress) },
-                animationValue = animationValue,
-                responsiveDimensions = responsiveDimensions,
-                modifier = Modifier.offset(
-                    x = position.x.dp,
-                    y = position.y.dp
-                )
-            )
-        }
+        // Draw connection dot
+        drawCircle(
+            color = ConnectionDot,
+            radius = 3.dp.toPx(),
+            center = Offset(x, size.height / 2)
+        )
+        
+        // Draw connection dot glow
+        drawCircle(
+            color = ConnectionGlow,
+            radius = 6.dp.toPx(),
+            center = Offset(x, size.height / 2)
+        )
     }
 }
 

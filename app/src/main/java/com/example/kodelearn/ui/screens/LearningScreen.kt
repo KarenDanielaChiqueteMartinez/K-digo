@@ -263,16 +263,16 @@ private fun LearningScreenContent() {
             ) {
                 // Course Header
                 CourseHeader(
-                    courseName = "JavaScript",
-                    courseDescription = "Aprende los fundamentos de JavaScript desde cero hasta convertirte en un desarrollador competente.",
+                    courseName = "Programación Básica",
+                    courseDescription = "Aprende los fundamentos de la programación desde cero. Domina conceptos esenciales como variables, estructuras de control, funciones y lógica de programación.",
                     modifier = Modifier.padding(16.dp)
                 )
                 
                 // Progress Overview
                 ProgressOverview(
-                    progress = 25f,
+                    progress = 8.3f,
                     completedModules = 1,
-                    totalModules = 4,
+                    totalModules = 12,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
                 
@@ -305,19 +305,19 @@ private fun getSampleModulesForPreview(): List<com.example.kodelearn.data.reposi
             module = com.example.kodelearn.data.database.entities.Module(
                 id = 1,
                 courseId = 1,
-                name = "Conceptos básicos de JavaScript",
-                description = "Aprende los fundamentos: variables, tipos de datos, operadores y estructuras básicas.",
-                totalLessons = 4,
+                name = "Introducción a la Sintaxis Básica",
+                description = "Aprende los fundamentos de la sintaxis de programación, reglas básicas y estructura de código.",
+                totalLessons = 3,
                 order = 1,
                 isLocked = false,
-                xpReward = 50
+                xpReward = 40
             ),
             progress = com.example.kodelearn.data.database.entities.Progress(
                 id = 1,
                 userId = 1,
                 moduleId = 1,
                 lessonsCompleted = 1,
-                progressPercentage = 25f,
+                progressPercentage = 33f,
                 isCompleted = false
             )
         ),
@@ -325,12 +325,12 @@ private fun getSampleModulesForPreview(): List<com.example.kodelearn.data.reposi
             module = com.example.kodelearn.data.database.entities.Module(
                 id = 2,
                 courseId = 1,
-                name = "Estructuras de Control",
-                description = "Domina las estructuras condicionales y bucles para controlar el flujo de tu código.",
-                totalLessons = 5,
+                name = "Declaración de Variables y Tipos de Datos",
+                description = "Domina cómo declarar variables y trabajar con diferentes tipos de datos en programación.",
+                totalLessons = 4,
                 order = 2,
                 isLocked = true,
-                xpReward = 60
+                xpReward = 50
             ),
             progress = null
         ),
@@ -338,12 +338,12 @@ private fun getSampleModulesForPreview(): List<com.example.kodelearn.data.reposi
             module = com.example.kodelearn.data.database.entities.Module(
                 id = 3,
                 courseId = 1,
-                name = "Funciones y Métodos",
-                description = "Crea funciones reutilizables y aprende sobre el scope y closures en JavaScript.",
-                totalLessons = 6,
+                name = "Operadores",
+                description = "Aprende a usar operadores aritméticos, lógicos y de comparación en tu código.",
+                totalLessons = 3,
                 order = 3,
                 isLocked = true,
-                xpReward = 70
+                xpReward = 45
             ),
             progress = null
         ),
@@ -351,12 +351,12 @@ private fun getSampleModulesForPreview(): List<com.example.kodelearn.data.reposi
             module = com.example.kodelearn.data.database.entities.Module(
                 id = 4,
                 courseId = 1,
-                name = "Objetos y Arrays",
-                description = "Trabaja con estructuras de datos complejas y manipula objetos y arrays.",
-                totalLessons = 7,
+                name = "Estructuras de Control",
+                description = "Comprende las estructuras de control que dirigen el flujo de ejecución de tu programa.",
+                totalLessons = 5,
                 order = 4,
                 isLocked = true,
-                xpReward = 80
+                xpReward = 60
             ),
             progress = null
         ),
@@ -364,12 +364,103 @@ private fun getSampleModulesForPreview(): List<com.example.kodelearn.data.reposi
             module = com.example.kodelearn.data.database.entities.Module(
                 id = 5,
                 courseId = 1,
-                name = "DOM y Eventos",
-                description = "Interactúa con el DOM y maneja eventos para crear aplicaciones dinámicas.",
-                totalLessons = 8,
+                name = "Condicionales (if/else)",
+                description = "Domina las estructuras condicionales para tomar decisiones en tu código.",
+                totalLessons = 4,
                 order = 5,
                 isLocked = true,
-                xpReward = 90
+                xpReward = 50
+            ),
+            progress = null
+        ),
+        com.example.kodelearn.data.repository.ModuleWithProgress(
+            module = com.example.kodelearn.data.database.entities.Module(
+                id = 6,
+                courseId = 1,
+                name = "Ciclos (for/while)",
+                description = "Aprende a crear bucles y repeticiones para automatizar tareas repetitivas.",
+                totalLessons = 4,
+                order = 6,
+                isLocked = true,
+                xpReward = 50
+            ),
+            progress = null
+        ),
+        com.example.kodelearn.data.repository.ModuleWithProgress(
+            module = com.example.kodelearn.data.database.entities.Module(
+                id = 7,
+                courseId = 1,
+                name = "Funciones y Procedimientos",
+                description = "Crea funciones reutilizables para organizar y modularizar tu código.",
+                totalLessons = 5,
+                order = 7,
+                isLocked = true,
+                xpReward = 60
+            ),
+            progress = null
+        ),
+        com.example.kodelearn.data.repository.ModuleWithProgress(
+            module = com.example.kodelearn.data.database.entities.Module(
+                id = 8,
+                courseId = 1,
+                name = "Modularidad y Reutilización",
+                description = "Aprende principios de diseño para crear código modular y reutilizable.",
+                totalLessons = 4,
+                order = 8,
+                isLocked = true,
+                xpReward = 50
+            ),
+            progress = null
+        ),
+        com.example.kodelearn.data.repository.ModuleWithProgress(
+            module = com.example.kodelearn.data.database.entities.Module(
+                id = 9,
+                courseId = 1,
+                name = "Estructuras de Datos",
+                description = "Comprende las estructuras de datos fundamentales y cuándo usar cada una.",
+                totalLessons = 5,
+                order = 9,
+                isLocked = true,
+                xpReward = 60
+            ),
+            progress = null
+        ),
+        com.example.kodelearn.data.repository.ModuleWithProgress(
+            module = com.example.kodelearn.data.database.entities.Module(
+                id = 10,
+                courseId = 1,
+                name = "Arreglos y Listas",
+                description = "Domina el trabajo con colecciones de datos: arreglos, listas y sus operaciones.",
+                totalLessons = 4,
+                order = 10,
+                isLocked = true,
+                xpReward = 50
+            ),
+            progress = null
+        ),
+        com.example.kodelearn.data.repository.ModuleWithProgress(
+            module = com.example.kodelearn.data.database.entities.Module(
+                id = 11,
+                courseId = 1,
+                name = "Entrada y Salida de Datos",
+                description = "Aprende a manejar la entrada de datos del usuario y mostrar información.",
+                totalLessons = 3,
+                order = 11,
+                isLocked = true,
+                xpReward = 45
+            ),
+            progress = null
+        ),
+        com.example.kodelearn.data.repository.ModuleWithProgress(
+            module = com.example.kodelearn.data.database.entities.Module(
+                id = 12,
+                courseId = 1,
+                name = "Lógica y Resolución de Problemas",
+                description = "Desarrolla habilidades de pensamiento lógico y resolución de problemas de programación.",
+                totalLessons = 6,
+                order = 12,
+                isLocked = true,
+                xpReward = 70
             ),
             progress = null
         )
