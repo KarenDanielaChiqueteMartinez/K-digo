@@ -4,6 +4,7 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -83,37 +84,47 @@ fun ModulePath(
         }
     }
     
-    Column(
+    LazyColumn(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(180.dp)
     ) {
-        // Calculate total height needed for all modules
-        val totalHeight = ((modules.size / 2 + 1) * 150).dp
-        
-        
-        // Draw modules along the snake path
-        modules.forEachIndexed { index, moduleWithProgress ->
-            val position = calculateSnakeModulePosition(
-                index = index,
-                totalModules = modules.size,
-                screenWidth = screenWidth,
-                screenHeight = totalHeight.value,
-                responsiveDimensions = responsiveDimensions
-            )
-            
-            val animationValue = if (index < moduleAnimations.size) moduleAnimations[index].value else 1f
-            
-            PathModule(
-                moduleWithProgress = moduleWithProgress,
-                onClick = { onModuleClick(moduleWithProgress) },
-                animationValue = animationValue,
-                responsiveDimensions = responsiveDimensions,
-                modifier = Modifier.offset(
-                    x = position.x.dp,
-                    y = position.y.dp
-                )
-            )
+        items(modules.size / 2 + 1) { rowIndex ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                // Left side module
+                if (rowIndex * 2 < modules.size) {
+                    val leftIndex = rowIndex * 2
+                    val animationValue = if (leftIndex < moduleAnimations.size) moduleAnimations[leftIndex].value else 1f
+                    
+                    PathModule(
+                        moduleWithProgress = modules[leftIndex],
+                        onClick = { onModuleClick(modules[leftIndex]) },
+                        animationValue = animationValue,
+                        responsiveDimensions = responsiveDimensions
+                    )
+                } else {
+                    Spacer(modifier = Modifier.size(if (responsiveDimensions.isTablet) 160.dp else 140.dp))
+                }
+                
+                // Right side module
+                if (rowIndex * 2 + 1 < modules.size) {
+                    val rightIndex = rowIndex * 2 + 1
+                    val animationValue = if (rightIndex < moduleAnimations.size) moduleAnimations[rightIndex].value else 1f
+                    
+                    PathModule(
+                        moduleWithProgress = modules[rightIndex],
+                        onClick = { onModuleClick(modules[rightIndex]) },
+                        animationValue = animationValue,
+                        responsiveDimensions = responsiveDimensions
+                    )
+                } else {
+                    Spacer(modifier = Modifier.size(if (responsiveDimensions.isTablet) 160.dp else 140.dp))
+                }
+            }
         }
     }
 }
@@ -336,14 +347,14 @@ private fun calculateSnakeModulePosition(
     screenHeight: Float,
     responsiveDimensions: ResponsiveDimensions
 ): Offset {
-    val moduleSpacing = 150f // Increased spacing for larger modules
-    val sideMargin = if (responsiveDimensions.isTablet) 140f else 120f
+    val moduleSpacing = 180f // Increased spacing for larger modules
+    val sideMargin = if (responsiveDimensions.isTablet) 160f else 140f
     
     val row = index / 2
     val isLeft = index % 2 == 0
     
     val x = if (isLeft) sideMargin else screenWidth - sideMargin
-    val y = 80f + (row * moduleSpacing)
+    val y = 100f + (row * moduleSpacing)
     
     return Offset(x, y)
 }
@@ -391,8 +402,8 @@ private fun PathModule(
     
     Card(
         modifier = modifier
-            .size(if (responsiveDimensions.isTablet) 130.dp else 115.dp)
-            .clip(RoundedCornerShape(20.dp))
+            .size(if (responsiveDimensions.isTablet) 160.dp else 140.dp)
+            .clip(RoundedCornerShape(24.dp))
             .scale(animationValue)
             .alpha(animationValue),
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
@@ -415,7 +426,7 @@ private fun PathModule(
                         imageVector = Icons.Default.CheckCircle,
                         contentDescription = "Completado",
                         tint = Color.White,
-                        modifier = Modifier.size(50.dp)
+                        modifier = Modifier.size(60.dp)
                     )
                 }
                 isLocked -> {
@@ -423,7 +434,7 @@ private fun PathModule(
                         imageVector = Icons.Default.Lock,
                         contentDescription = "Bloqueado",
                         tint = textColor,
-                        modifier = Modifier.size(46.dp)
+                        modifier = Modifier.size(56.dp)
                     )
                 }
                 else -> {
@@ -431,7 +442,7 @@ private fun PathModule(
                         imageVector = Icons.Default.PlayArrow,
                         contentDescription = "Disponible",
                         tint = Color.White,
-                        modifier = Modifier.size(50.dp)
+                        modifier = Modifier.size(60.dp)
                     )
                 }
             }
