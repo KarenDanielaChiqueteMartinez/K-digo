@@ -10,11 +10,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.graphicsLayer
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -53,7 +53,7 @@ fun ModulePopup(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ModulePopupContent(
     moduleWithProgress: ModuleWithProgress,
@@ -96,11 +96,8 @@ private fun ModulePopupContent(
             modifier = Modifier
                 .fillMaxWidth(responsiveDimensions.popupWidth)
                 .padding(responsivePadding.large)
-                .graphicsLayer(
-                    scaleX = scale,
-                    scaleY = scale,
-                    alpha = alpha
-                ),
+                .scale(scale)
+                .alpha(alpha),
             shape = RoundedCornerShape(24.dp),
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surface

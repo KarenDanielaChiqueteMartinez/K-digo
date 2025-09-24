@@ -8,11 +8,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.graphicsLayer
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -23,13 +21,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.scale
 import com.example.kodelearn.data.database.entities.Module
 import com.example.kodelearn.data.database.entities.Progress
 import com.example.kodelearn.data.repository.ModuleWithProgress
 import com.example.kodelearn.ui.theme.*
 import kotlin.math.*
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ModulePath(
     modules: List<ModuleWithProgress>,
@@ -257,7 +256,6 @@ private fun calculateModulePosition(
     return Offset(x, y)
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun PathModule(
     moduleWithProgress: ModuleWithProgress,
@@ -301,11 +299,8 @@ private fun PathModule(
         modifier = modifier
             .size(responsiveDimensions.moduleSize)
             .clip(RoundedCornerShape(20.dp))
-            .graphicsLayer(
-                scaleX = animationValue,
-                scaleY = animationValue,
-                alpha = animationValue
-            ),
+            .scale(animationValue)
+            .alpha(animationValue),
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
         elevation = CardDefaults.cardElevation(
             defaultElevation = if (isLocked) 2.dp else 8.dp
