@@ -45,6 +45,10 @@ fun ModulePath(
     onModuleClick: (ModuleWithProgress) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // Safety check to prevent crashes
+    if (modules.isEmpty()) {
+        return
+    }
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current
     val responsiveDimensions = rememberResponsiveDimensions()
@@ -72,27 +76,36 @@ fun ModulePath(
     }
     
     LaunchedEffect(modules.size) {
-        moduleAnimations.forEachIndexed { index, animatable ->
-            delay(index * 200L)
-            animatable.animateTo(
-                targetValue = 1f,
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                    stiffness = Spring.StiffnessLow
+        try {
+            moduleAnimations.forEachIndexed { index, animatable ->
+                delay(index * 200L)
+                animatable.animateTo(
+                    targetValue = 1f,
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessLow
+                    )
                 )
-            )
+            }
+        } catch (e: Exception) {
+            // Handle animation errors gracefully
+            moduleAnimations.forEach { animatable ->
+                animatable.snapTo(1f)
+            }
         }
     }
     
     LazyColumn(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(180.dp)
+            .padding(16.dp)
     ) {
-        items(modules.size / 2 + 1) { rowIndex ->
+        val totalRows = (modules.size + 1) / 2
+        items(totalRows) { rowIndex ->
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 90.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 // Left side module
