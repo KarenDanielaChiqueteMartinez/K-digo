@@ -126,22 +126,16 @@ private fun DrawScope.drawHorizontalPath(
 ) {
     if (modules.isEmpty()) return
     
-    // Draw animated connection line
-    val pathPaint = Paint().apply {
-        color = PathColor.copy(alpha = 0.6f)
-        style = PaintingStyle.Stroke
-        strokeWidth = 4.dp.toPx()
+    // Draw horizontal line with animated effect
+    drawLine(
+        color = PathColor.copy(alpha = 0.6f),
+        start = Offset(0f, size.height / 2),
+        end = Offset(screenWidth, size.height / 2),
+        strokeWidth = 4.dp.toPx(),
         pathEffect = PathEffect.dashPathEffect(
             floatArrayOf(15f, 8f),
             animationOffset * 25f
         )
-    }
-    
-    // Draw horizontal line
-    drawLine(
-        start = Offset(0f, size.height / 2),
-        end = Offset(screenWidth, size.height / 2),
-        paint = pathPaint
     )
     
     // Draw connection dots for each module
