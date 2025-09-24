@@ -83,20 +83,23 @@ fun ModulePath(
         }
     }
     
-    Box(
+    Column(
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 600.dp)
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
+            .padding(16.dp)
     ) {
+        // Calculate total height needed for all modules
+        val totalHeight = (modules.size / 2 + 1) * 120.dp
+        
         Canvas(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(totalHeight)
         ) {
             drawSnakePath(
                 modules = modules,
-                screenWidth = screenWidth,
-                screenHeight = screenHeight,
+                screenWidth = size.width,
+                screenHeight = size.height,
                 animationOffset = animationOffset
             )
         }
@@ -107,7 +110,7 @@ fun ModulePath(
                 index = index,
                 totalModules = modules.size,
                 screenWidth = screenWidth,
-                screenHeight = screenHeight,
+                screenHeight = totalHeight.value,
                 responsiveDimensions = responsiveDimensions
             )
             
@@ -160,17 +163,29 @@ private fun DrawScope.drawSnakePath(
         val path = Path()
         path.moveTo(current.x, current.y)
         
-        // Add curve for more natural flow
+        // Create smooth S-curve for more natural flow
         val midX = (current.x + next.x) / 2
         val midY = (current.y + next.y) / 2
         
         if (abs(current.x - next.x) > 50f) {
-            // Horizontal connection - add slight curve
-            val controlY = midY + if (current.x > next.x) 20f else -20f
-            path.quadraticBezierTo(midX, controlY, next.x, next.y)
+            // Horizontal connection - create S-curve
+            val curveIntensity = 40f
+            val controlY1 = midY + if (current.x > next.x) curveIntensity else -curveIntensity
+            val controlY2 = midY + if (current.x > next.x) -curveIntensity else curveIntensity
+            
+            // Create S-curve with two control points
+            val controlX1 = current.x + (midX - current.x) * 0.5f
+            val controlX2 = midX + (next.x - midX) * 0.5f
+            
+            path.cubicTo(
+                x1 = controlX1, y1 = controlY1,
+                x2 = controlX2, y2 = controlY2,
+                x3 = next.x, y3 = next.y
+            )
         } else {
-            // Vertical connection - straight line
-            path.lineTo(next.x, next.y)
+            // Vertical connection - add slight curve
+            val controlX = midX + if (current.y > next.y) 20f else -20f
+            path.quadraticBezierTo(controlX, midY, next.x, next.y)
         }
         
         // Draw smooth line with gradient effect
@@ -333,14 +348,14 @@ private fun calculateSnakeModulePosition(
     screenHeight: Float,
     responsiveDimensions: ResponsiveDimensions
 ): Offset {
-    val moduleSpacing = screenHeight / (totalModules / 2 + 1)
-    val sideMargin = if (responsiveDimensions.isTablet) 100f else 80f
+    val moduleSpacing = 120f // Fixed spacing for larger modules
+    val sideMargin = if (responsiveDimensions.isTablet) 120f else 100f
     
     val row = index / 2
     val isLeft = index % 2 == 0
     
     val x = if (isLeft) sideMargin else screenWidth - sideMargin
-    val y = 50f + (row * moduleSpacing)
+    val y = 60f + (row * moduleSpacing)
     
     return Offset(x, y)
 }
@@ -388,8 +403,8 @@ private fun PathModule(
     
     Card(
         modifier = modifier
-            .size(if (responsiveDimensions.isTablet) 90.dp else 75.dp)
-            .clip(RoundedCornerShape(16.dp))
+            .size(if (responsiveDimensions.isTablet) 110.dp else 95.dp)
+            .clip(RoundedCornerShape(18.dp))
             .scale(animationValue)
             .alpha(animationValue),
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
@@ -412,7 +427,7 @@ private fun PathModule(
                         imageVector = Icons.Default.CheckCircle,
                         contentDescription = "Completado",
                         tint = Color.White,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(40.dp)
                     )
                 }
                 isLocked -> {
@@ -420,7 +435,7 @@ private fun PathModule(
                         imageVector = Icons.Default.Lock,
                         contentDescription = "Bloqueado",
                         tint = textColor,
-                        modifier = Modifier.size(28.dp)
+                        modifier = Modifier.size(36.dp)
                     )
                 }
                 else -> {
@@ -428,7 +443,7 @@ private fun PathModule(
                         imageVector = Icons.Default.PlayArrow,
                         contentDescription = "Disponible",
                         tint = Color.White,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(40.dp)
                     )
                 }
             }
