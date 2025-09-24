@@ -2,21 +2,26 @@ package com.example.kodelearn.ui.components
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.graphicsLayer
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
 import com.example.kodelearn.data.database.entities.Module
 import com.example.kodelearn.data.database.entities.Progress
 import com.example.kodelearn.data.repository.ModuleWithProgress
@@ -135,7 +140,6 @@ private fun DrawScope.drawWormPath(
         color = Color.Black.copy(alpha = 0.1f)
         style = PaintingStyle.Stroke
         strokeWidth = 12.dp.toPx()
-        maskFilter = BlurMaskFilter(4.dp.toPx(), BlurMaskFilter.Blur.NORMAL)
     }
     
     // Create the curved path
@@ -158,17 +162,24 @@ private fun DrawScope.drawWormPath(
     // Add some wavy motion
     val wavePath = Path()
     val wavePoints = mutableListOf<Offset>()
-    val pathMeasure = PathMeasure(path, false)
-    val pathLength = pathMeasure.length
+    
+    // Create a simple curved path instead of using PathMeasure
+    val pathLength = screenWidth - 100f
+    val pathHeight = screenHeight - 150f
     
     for (i in 0..100) {
-        val distance = (i / 100f) * pathLength
-        val pos = Offset.Zero
-        val tan = Offset.Zero
-        pathMeasure.getPosTan(distance, pos, tan)
+        val progress = i / 100f
+        val x = 50f + progress * pathLength
+        val baseY = 50f + progress * pathHeight
         
-        val waveOffset = sin(distance * 0.02 + animationOffset * 2 * PI) * 15f
-        wavePoints.add(Offset(pos.x, pos.y + waveOffset))
+        // Add curve to the path
+        val curveOffset = when {
+            progress < 0.5f -> sin(progress * PI.toFloat()) * 80f
+            else -> sin((1 - progress) * PI.toFloat()) * 80f
+        }
+        
+        val waveOffset = sin(progress * 10f + animationOffset * 2 * PI.toFloat()) * 15f
+        wavePoints.add(Offset(x, baseY + curveOffset + waveOffset))
     }
     
     if (wavePoints.isNotEmpty()) {
@@ -179,9 +190,9 @@ private fun DrawScope.drawWormPath(
     }
     
     // Draw shadow first
-    drawPath(wavePath, shadowPaint)
+    drawPath(wavePath, Color.Black.copy(alpha = 0.1f), style = Stroke(width = 12.dp.toPx()))
     // Draw main path
-    drawPath(wavePath, pathPaint)
+    drawPath(wavePath, PathColor.copy(alpha = 0.6f), style = Stroke(width = 8.dp.toPx()))
     
     // Draw connection dots
     val dotPaint = Paint().apply {
@@ -194,26 +205,27 @@ private fun DrawScope.drawWormPath(
             index = index,
             totalModules = modules.size,
             screenWidth = screenWidth,
-            screenHeight = screenHeight
+            screenHeight = screenHeight,
+            responsiveDimensions = ResponsiveDimensions(
+                screenWidth = screenWidth.toInt(),
+                screenHeight = screenHeight.toInt(),
+                isTablet = false,
+                isLandscape = false
+            )
         )
         
         // Draw connection dot
         drawCircle(
-            center = Offset(position.x.toPx(), position.y.toPx()),
+            color = ConnectionDot,
             radius = 4.dp.toPx(),
-            paint = dotPaint
+            center = Offset(position.x, position.y)
         )
         
         // Draw connection dot glow
-        val glowPaint = Paint().apply {
-            color = ConnectionGlow
-            style = PaintingStyle.Fill
-            maskFilter = BlurMaskFilter(8.dp.toPx(), BlurMaskFilter.Blur.NORMAL)
-        }
         drawCircle(
-            center = Offset(position.x.toPx(), position.y.toPx()),
+            color = ConnectionGlow,
             radius = 8.dp.toPx(),
-            paint = glowPaint
+            center = Offset(position.x, position.y)
         )
     }
 }
@@ -234,8 +246,8 @@ private fun calculateModulePosition(
     // Add curve to the path with responsive spacing
     val curveAmplitude = if (responsiveDimensions.isTablet) 100f else 80f
     val curveOffset = when {
-        progress < 0.5f -> sin(progress * PI) * curveAmplitude
-        else -> sin((1 - progress) * PI) * curveAmplitude
+        progress < 0.5f -> sin(progress * PI.toFloat()) * curveAmplitude
+        else -> sin((1 - progress) * PI.toFloat()) * curveAmplitude
     }
     
     val y = baseY + curveOffset
