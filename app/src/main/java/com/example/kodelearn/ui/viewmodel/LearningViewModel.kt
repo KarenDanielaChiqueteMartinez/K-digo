@@ -27,7 +27,7 @@ class LearningViewModel(
     private val _uiState = MutableStateFlow(LearningUiState())
     val uiState: StateFlow<LearningUiState> = _uiState.asStateFlow()
 
-    private val currentCourseId = 1 // Python course ID
+    private val currentCourseId = 1 // Programación Básica course ID
 
     init {
         loadLearningData()

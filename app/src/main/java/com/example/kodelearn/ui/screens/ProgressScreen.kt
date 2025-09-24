@@ -364,9 +364,9 @@ private fun CourseProgressCard() {
             
             Spacer(modifier = Modifier.height(16.dp))
             
-            // Python course progress
+            // Programación Básica course progress
             CourseProgressItem(
-                courseName = "Python",
+                courseName = "Programación Básica",
                 progress = 40f,
                 completedLessons = 2,
                 totalLessons = 15

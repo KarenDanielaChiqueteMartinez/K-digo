@@ -174,7 +174,7 @@ private fun ContinueLearningSection() {
             Spacer(modifier = Modifier.height(12.dp))
             
             Text(
-                text = "Python Básico",
+                text = "Programación Básica",
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onSurface
