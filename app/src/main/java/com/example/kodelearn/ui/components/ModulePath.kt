@@ -89,20 +89,8 @@ fun ModulePath(
             .padding(16.dp)
     ) {
         // Calculate total height needed for all modules
-        val totalHeight = ((modules.size / 2 + 1) * 120).dp
+        val totalHeight = ((modules.size / 2 + 1) * 150).dp
         
-        Canvas(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(totalHeight)
-        ) {
-            drawSnakePath(
-                modules = modules,
-                screenWidth = size.width,
-                screenHeight = size.height,
-                animationOffset = animationOffset
-            )
-        }
         
         // Draw modules along the snake path
         modules.forEachIndexed { index, moduleWithProgress ->
@@ -348,14 +336,14 @@ private fun calculateSnakeModulePosition(
     screenHeight: Float,
     responsiveDimensions: ResponsiveDimensions
 ): Offset {
-    val moduleSpacing = 120f // Fixed spacing for larger modules
-    val sideMargin = if (responsiveDimensions.isTablet) 120f else 100f
+    val moduleSpacing = 150f // Increased spacing for larger modules
+    val sideMargin = if (responsiveDimensions.isTablet) 140f else 120f
     
     val row = index / 2
     val isLeft = index % 2 == 0
     
     val x = if (isLeft) sideMargin else screenWidth - sideMargin
-    val y = 60f + (row * moduleSpacing)
+    val y = 80f + (row * moduleSpacing)
     
     return Offset(x, y)
 }
@@ -403,8 +391,8 @@ private fun PathModule(
     
     Card(
         modifier = modifier
-            .size(if (responsiveDimensions.isTablet) 110.dp else 95.dp)
-            .clip(RoundedCornerShape(18.dp))
+            .size(if (responsiveDimensions.isTablet) 130.dp else 115.dp)
+            .clip(RoundedCornerShape(20.dp))
             .scale(animationValue)
             .alpha(animationValue),
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
@@ -427,7 +415,7 @@ private fun PathModule(
                         imageVector = Icons.Default.CheckCircle,
                         contentDescription = "Completado",
                         tint = Color.White,
-                        modifier = Modifier.size(40.dp)
+                        modifier = Modifier.size(50.dp)
                     )
                 }
                 isLocked -> {
@@ -435,7 +423,7 @@ private fun PathModule(
                         imageVector = Icons.Default.Lock,
                         contentDescription = "Bloqueado",
                         tint = textColor,
-                        modifier = Modifier.size(36.dp)
+                        modifier = Modifier.size(46.dp)
                     )
                 }
                 else -> {
@@ -443,7 +431,7 @@ private fun PathModule(
                         imageVector = Icons.Default.PlayArrow,
                         contentDescription = "Disponible",
                         tint = Color.White,
-                        modifier = Modifier.size(40.dp)
+                        modifier = Modifier.size(50.dp)
                     )
                 }
             }
