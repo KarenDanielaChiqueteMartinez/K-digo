@@ -277,7 +277,7 @@ private fun DrawScope.drawWormPath(
     }
     
     modules.forEachIndexed { index, _ ->
-        val position = calculateModulePosition(
+        val position = calculateSnakeModulePosition(
             index = index,
             totalModules = modules.size,
             screenWidth = screenWidth,
