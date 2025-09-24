@@ -89,7 +89,7 @@ fun ModulePath(
             .padding(16.dp)
     ) {
         // Calculate total height needed for all modules
-        val totalHeight = (modules.size / 2 + 1) * 120.dp
+        val totalHeight = ((modules.size / 2 + 1) * 120).dp
         
         Canvas(
             modifier = Modifier
