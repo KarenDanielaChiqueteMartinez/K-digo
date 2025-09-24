@@ -77,84 +77,118 @@ fun ModulePath(
         }
     }
     
-    Column(
+    Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .heightIn(min = 600.dp)
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
     ) {
-        // Horizontal scrollable path
-        LazyRow(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(horizontal = 8.dp)
+        Canvas(
+            modifier = Modifier.fillMaxSize()
         ) {
-            items(modules.size) { index ->
-                val moduleWithProgress = modules[index]
-                val animationValue = if (index < moduleAnimations.size) moduleAnimations[index].value else 1f
-                
-                PathModule(
-                    moduleWithProgress = moduleWithProgress,
-                    onClick = { onModuleClick(moduleWithProgress) },
-                    animationValue = animationValue,
-                    responsiveDimensions = responsiveDimensions,
-                    modifier = Modifier
-                )
-            }
+            drawSnakePath(
+                modules = modules,
+                screenWidth = screenWidth,
+                screenHeight = screenHeight,
+                animationOffset = animationOffset
+            )
         }
         
-        // Connection line below modules
-        Spacer(modifier = Modifier.height(20.dp))
-        
-        Canvas(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(4.dp)
-        ) {
-            drawHorizontalPath(
-                modules = modules,
-                screenWidth = size.width,
-                animationOffset = animationOffset
+        // Draw modules along the snake path
+        modules.forEachIndexed { index, moduleWithProgress ->
+            val position = calculateSnakeModulePosition(
+                index = index,
+                totalModules = modules.size,
+                screenWidth = screenWidth,
+                screenHeight = screenHeight,
+                responsiveDimensions = responsiveDimensions
+            )
+            
+            val animationValue = if (index < moduleAnimations.size) moduleAnimations[index].value else 1f
+            
+            PathModule(
+                moduleWithProgress = moduleWithProgress,
+                onClick = { onModuleClick(moduleWithProgress) },
+                animationValue = animationValue,
+                responsiveDimensions = responsiveDimensions,
+                modifier = Modifier.offset(
+                    x = position.x.dp,
+                    y = position.y.dp
+                )
             )
         }
     }
 }
 
-private fun DrawScope.drawHorizontalPath(
+private fun DrawScope.drawSnakePath(
     modules: List<ModuleWithProgress>,
     screenWidth: Float,
+    screenHeight: Float,
     animationOffset: Float
 ) {
     if (modules.isEmpty()) return
     
-    // Draw horizontal line with animated effect
-    drawLine(
-        color = PathColor.copy(alpha = 0.6f),
-        start = Offset(0f, size.height / 2),
-        end = Offset(screenWidth, size.height / 2),
-        strokeWidth = 4.dp.toPx(),
-        pathEffect = PathEffect.dashPathEffect(
-            floatArrayOf(15f, 8f),
-            animationOffset * 25f
-        )
-    )
+    // Calculate snake path positions
+    val pathPoints = mutableListOf<Offset>()
+    val moduleSpacing = screenHeight / (modules.size / 2 + 1)
+    val sideMargin = 80f
+    val centerX = screenWidth / 2
     
-    // Draw connection dots for each module
-    val dotSpacing = screenWidth / modules.size
     modules.forEachIndexed { index, _ ->
-        val x = (index * dotSpacing) + (dotSpacing / 2)
+        val row = index / 2
+        val isLeft = index % 2 == 0
         
-        // Draw connection dot
+        val x = if (isLeft) sideMargin else screenWidth - sideMargin
+        val y = 50f + (row * moduleSpacing)
+        
+        pathPoints.add(Offset(x, y))
+    }
+    
+    // Draw connecting lines between modules
+    for (i in 0 until pathPoints.size - 1) {
+        val current = pathPoints[i]
+        val next = pathPoints[i + 1]
+        
+        // Draw animated line
+        drawLine(
+            color = PathColor.copy(alpha = 0.6f),
+            start = current,
+            end = next,
+            strokeWidth = 6.dp.toPx(),
+            pathEffect = PathEffect.dashPathEffect(
+                floatArrayOf(20f, 10f),
+                animationOffset * 30f
+            )
+        )
+        
+        // Draw connection dots
         drawCircle(
             color = ConnectionDot,
-            radius = 3.dp.toPx(),
-            center = Offset(x, size.height / 2)
+            radius = 4.dp.toPx(),
+            center = current
         )
         
-        // Draw connection dot glow
         drawCircle(
             color = ConnectionGlow,
-            radius = 6.dp.toPx(),
-            center = Offset(x, size.height / 2)
+            radius = 8.dp.toPx(),
+            center = current
+        )
+    }
+    
+    // Draw final dot
+    if (pathPoints.isNotEmpty()) {
+        val lastPoint = pathPoints.last()
+        drawCircle(
+            color = ConnectionDot,
+            radius = 4.dp.toPx(),
+            center = lastPoint
+        )
+        
+        drawCircle(
+            color = ConnectionGlow,
+            radius = 8.dp.toPx(),
+            center = lastPoint
         )
     }
 }
@@ -272,27 +306,21 @@ private fun DrawScope.drawWormPath(
     }
 }
 
-private fun calculateModulePosition(
+private fun calculateSnakeModulePosition(
     index: Int,
     totalModules: Int,
     screenWidth: Float,
     screenHeight: Float,
     responsiveDimensions: ResponsiveDimensions
 ): Offset {
-    val progress = if (totalModules > 1) index / (totalModules - 1f) else 0f
+    val moduleSpacing = screenHeight / (totalModules / 2 + 1)
+    val sideMargin = if (responsiveDimensions.isTablet) 100f else 80f
     
-    // Create S-curve positioning
-    val x = 50f + progress * (screenWidth - 100f)
-    val baseY = 50f + progress * (screenHeight - 200f)
+    val row = index / 2
+    val isLeft = index % 2 == 0
     
-    // Add curve to the path with responsive spacing
-    val curveAmplitude = if (responsiveDimensions.isTablet) 100f else 80f
-    val curveOffset = when {
-        progress < 0.5f -> sin(progress * PI.toFloat()) * curveAmplitude
-        else -> sin((1 - progress) * PI.toFloat()) * curveAmplitude
-    }
-    
-    val y = baseY + curveOffset
+    val x = if (isLeft) sideMargin else screenWidth - sideMargin
+    val y = 50f + (row * moduleSpacing)
     
     return Offset(x, y)
 }
