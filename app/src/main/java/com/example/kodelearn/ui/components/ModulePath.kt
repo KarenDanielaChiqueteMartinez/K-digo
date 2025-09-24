@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +29,7 @@ import com.example.kodelearn.data.repository.ModuleWithProgress
 import com.example.kodelearn.ui.theme.*
 import kotlin.math.*
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ModulePath(
     modules: List<ModuleWithProgress>,
@@ -97,7 +99,7 @@ fun ModulePath(
                 index = index,
                 totalModules = modules.size,
                 screenWidth = screenWidth,
-                screenHeight = size.height,
+                screenHeight = screenHeight,
                 responsiveDimensions = responsiveDimensions
             )
             
@@ -255,6 +257,7 @@ private fun calculateModulePosition(
     return Offset(x, y)
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun PathModule(
     moduleWithProgress: ModuleWithProgress,
