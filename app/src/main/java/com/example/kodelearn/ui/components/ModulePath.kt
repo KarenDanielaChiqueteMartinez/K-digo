@@ -29,6 +29,7 @@ import com.example.kodelearn.data.repository.ModuleWithProgress
 import com.example.kodelearn.ui.theme.*
 import kotlin.math.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModulePath(
     modules: List<ModuleWithProgress>,
@@ -256,6 +257,7 @@ private fun calculateModulePosition(
     return Offset(x, y)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PathModule(
     moduleWithProgress: ModuleWithProgress,
