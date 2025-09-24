@@ -17,6 +17,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
+import androidx.compose.foundation.BorderStroke
 import com.example.kodelearn.data.database.entities.Module
 import com.example.kodelearn.data.database.entities.Progress
 import com.example.kodelearn.data.repository.ModuleWithProgress
@@ -145,34 +147,48 @@ private fun DrawScope.drawSnakePath(
         pathPoints.add(Offset(x, y))
     }
     
-    // Draw connecting lines between modules
+    // Draw smooth connecting lines between modules
     for (i in 0 until pathPoints.size - 1) {
         val current = pathPoints[i]
         val next = pathPoints[i + 1]
         
-        // Draw animated line
-        drawLine(
-            color = PathColor.copy(alpha = 0.6f),
-            start = current,
-            end = next,
-            strokeWidth = 6.dp.toPx(),
-            pathEffect = PathEffect.dashPathEffect(
-                floatArrayOf(20f, 10f),
-                animationOffset * 30f
+        // Create smooth curved path
+        val path = Path()
+        path.moveTo(current.x, current.y)
+        
+        // Add curve for more natural flow
+        val midX = (current.x + next.x) / 2
+        val midY = (current.y + next.y) / 2
+        
+        if (abs(current.x - next.x) > 50f) {
+            // Horizontal connection - add slight curve
+            val controlY = midY + if (current.x > next.x) 20f else -20f
+            path.quadraticBezierTo(midX, controlY, next.x, next.y)
+        } else {
+            // Vertical connection - straight line
+            path.lineTo(next.x, next.y)
+        }
+        
+        // Draw smooth line with gradient effect
+        drawPath(
+            path = path,
+            color = Color(0xFF4CAF50).copy(alpha = 0.7f),
+            style = Stroke(
+                width = 8.dp.toPx(),
+                cap = StrokeCap.Round,
+                join = StrokeJoin.Round
             )
         )
         
-        // Draw connection dots
-        drawCircle(
-            color = ConnectionDot,
-            radius = 4.dp.toPx(),
-            center = current
-        )
-        
-        drawCircle(
-            color = ConnectionGlow,
-            radius = 8.dp.toPx(),
-            center = current
+        // Draw subtle glow effect
+        drawPath(
+            path = path,
+            color = Color(0xFF4CAF50).copy(alpha = 0.3f),
+            style = Stroke(
+                width = 12.dp.toPx(),
+                cap = StrokeCap.Round,
+                join = StrokeJoin.Round
+            )
         )
     }
     
@@ -341,100 +357,97 @@ private fun PathModule(
     val isLocked = module.isLocked && progress == null
     val progressPercentage = progress?.progressPercentage ?: 0f
     
-    // Module colors based on state with Candy Crush variety
-    val candyColors = listOf(
-        CandyRed, CandyOrange, CandyYellow, 
-        CandyGreen, CandyBlue, CandyPurple, CandyPink
-    )
-    val moduleColorIndex = module.order % candyColors.size
-    
+    // Modern colors based on state
     val backgroundColor = when {
-        isCompleted -> ModuleCompleted
-        isLocked -> ModuleLocked.copy(alpha = 0.7f)
-        else -> candyColors[moduleColorIndex]
+        isCompleted -> SuccessColor
+        isLocked -> Color(0xFFE0E0E0)
+        else -> PrimaryGreen
     }
     
     val borderColor = when {
         isCompleted -> SuccessColor
-        isLocked -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
-        else -> PrimaryGreen
+        isLocked -> Color(0xFFBDBDBD)
+        else -> PrimaryGreen.copy(alpha = 0.8f)
+    }
+    
+    val borderWidth = when {
+        isCompleted -> 0.dp
+        isLocked -> 0.dp
+        else -> 3.dp // Highlight current/available modules
     }
     
     val textColor = when {
-        isLocked -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+        isCompleted -> Color.White
+        isLocked -> Color(0xFF757575)
         else -> Color.White
     }
     
     Card(
         modifier = modifier
-            .size(responsiveDimensions.moduleSize)
-            .clip(RoundedCornerShape(20.dp))
+            .size(if (responsiveDimensions.isTablet) 90.dp else 75.dp)
+            .clip(RoundedCornerShape(16.dp))
             .scale(animationValue)
             .alpha(animationValue),
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = if (isLocked) 2.dp else 8.dp
+            defaultElevation = if (isLocked) 1.dp else 6.dp
         ),
+        border = if (borderWidth > 0.dp) {
+            BorderStroke(borderWidth, borderColor)
+        } else null,
         onClick = onClick
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                // Module number
-                Text(
-                    text = module.order.toString(),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = textColor,
-                    fontSize = 16.sp
-                )
-                
-                // Lock icon for locked modules
-                if (isLocked) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "🔒",
-                        fontSize = 12.sp
+            // Modern icon-based design
+            when {
+                isCompleted -> {
+                    Icon(
+                        imageVector = Icons.Default.CheckCircle,
+                        contentDescription = "Completado",
+                        tint = Color.White,
+                        modifier = Modifier.size(32.dp)
                     )
                 }
-                
-                // Progress indicator for active modules
-                if (!isLocked && progressPercentage > 0) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "${progressPercentage.toInt()}%",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = textColor.copy(alpha = 0.8f),
-                        fontSize = 10.sp
+                isLocked -> {
+                    Icon(
+                        imageVector = Icons.Default.Lock,
+                        contentDescription = "Bloqueado",
+                        tint = textColor,
+                        modifier = Modifier.size(28.dp)
+                    )
+                }
+                else -> {
+                    Icon(
+                        imageVector = Icons.Default.PlayArrow,
+                        contentDescription = "Disponible",
+                        tint = Color.White,
+                        modifier = Modifier.size(32.dp)
                     )
                 }
             }
             
-            // Completion checkmark
-            if (isCompleted) {
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(4.dp)
-                        .size(16.dp)
-                        .background(
-                            color = Color.White,
-                            shape = CircleShape
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "✓",
-                        color = SuccessColor,
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+            // Module number indicator
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(6.dp)
+                    .size(20.dp)
+                    .background(
+                        color = Color.White.copy(alpha = 0.9f),
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = module.order.toString(),
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = backgroundColor,
+                    fontSize = 10.sp
+                )
             }
         }
     }
