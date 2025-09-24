@@ -19,6 +19,7 @@ import com.example.kodelearn.data.repository.ModuleWithProgress
 import com.example.kodelearn.ui.theme.PrimaryGreen
 import com.example.kodelearn.ui.theme.SuccessColor
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModulePath(
     modules: List<ModuleWithProgress>,
@@ -45,6 +46,7 @@ fun ModulePath(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SimpleModule(
     moduleWithProgress: ModuleWithProgress,
