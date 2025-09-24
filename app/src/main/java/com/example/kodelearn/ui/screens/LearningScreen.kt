@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -13,19 +15,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kodelearn.data.repository.KodeLearnRepository
+import com.example.kodelearn.data.repository.ModuleWithProgress
 import com.example.kodelearn.ui.components.LearningTopBar
 import com.example.kodelearn.ui.components.ModuleItem
+import com.example.kodelearn.ui.components.ModulePath
+import com.example.kodelearn.ui.components.ModulePopup
 import com.example.kodelearn.ui.theme.KodeLearnTheme
 import com.example.kodelearn.ui.viewmodel.LearningViewModel
 
 @Composable
 fun LearningScreen(
     repository: KodeLearnRepository,
-    onNavigateToLesson: () -> Unit = {},
+    onNavigateToLesson: (ModuleWithProgress) -> Unit = {},
     modifier: Modifier = Modifier,
     viewModel: LearningViewModel = viewModel(factory = LearningViewModel.factory(repository))
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var selectedModule by remember { mutableStateOf<ModuleWithProgress?>(null) }
+    var showPopup by remember { mutableStateOf(false) }
     
     if (uiState.isLoading) {
         Box(
@@ -37,35 +44,36 @@ fun LearningScreen(
         return
     }
     
-    Column(
+    Box(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // Top Bar with Hearts, Coins, and Streak
-        uiState.user?.let { user ->
-            LearningTopBar(
-                hearts = user.hearts,
-                coins = user.coins,
-                streak = user.dailyStreak
-            )
-        }
-        
-        // Course Content
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+        Column(
+            modifier = Modifier.fillMaxSize()
         ) {
-            item {
-                // Course Header
-                CourseHeader(
-                    courseName = uiState.currentCourse?.name ?: "",
-                    courseDescription = uiState.currentCourse?.description ?: ""
+            // Top Bar with Hearts, Coins, and Streak
+            uiState.user?.let { user ->
+                LearningTopBar(
+                    hearts = user.hearts,
+                    coins = user.coins,
+                    streak = user.dailyStreak
                 )
             }
             
-            item {
+            // Course Content with Scroll
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
+                // Course Header
+                CourseHeader(
+                    courseName = uiState.currentCourse?.name ?: "",
+                    courseDescription = uiState.currentCourse?.description ?: "",
+                    modifier = Modifier.padding(16.dp)
+                )
+                
                 // Progress Overview
                 uiState.currentCourse?.let { course ->
                     val completedModules = uiState.modulesWithProgress.count { it.progress?.isCompleted == true }
@@ -77,46 +85,58 @@ fun LearningScreen(
                     ProgressOverview(
                         progress = overallProgress,
                         completedModules = completedModules,
-                        totalModules = totalModules
+                        totalModules = totalModules,
+                        modifier = Modifier.padding(horizontal = 16.dp)
                     )
                 }
-            }
-            
-            item {
+                
+                Spacer(modifier = Modifier.height(16.dp))
+                
+                // Learning Path Title
                 Text(
-                    text = "Módulos del curso",
+                    text = "Tu camino de aprendizaje",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.padding(vertical = 8.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
-            }
-            
-            // Modules List
-            items(uiState.modulesWithProgress) { moduleWithProgress ->
-                ModuleItem(
-                    module = moduleWithProgress.module,
-                    progress = moduleWithProgress.progress,
-                    onClick = {
-                        onNavigateToLesson()
+                
+                // Module Path with Curved Design
+                ModulePath(
+                    modules = uiState.modulesWithProgress,
+                    onModuleClick = { moduleWithProgress ->
+                        selectedModule = moduleWithProgress
+                        showPopup = true
                     }
                 )
-            }
-            
-            item {
-                Spacer(modifier = Modifier.height(80.dp)) // Space for bottom navigation
+                
+                Spacer(modifier = Modifier.height(100.dp)) // Space for bottom navigation
             }
         }
+        
+        // Module Popup
+        ModulePopup(
+            moduleWithProgress = selectedModule,
+            isVisible = showPopup,
+            onDismiss = {
+                showPopup = false
+                selectedModule = null
+            },
+            onStartModule = { moduleWithProgress ->
+                onNavigateToLesson(moduleWithProgress)
+            }
+        )
     }
 }
 
 @Composable
 private fun CourseHeader(
     courseName: String,
-    courseDescription: String
+    courseDescription: String,
+    modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
@@ -150,10 +170,11 @@ private fun CourseHeader(
 private fun ProgressOverview(
     progress: Float,
     completedModules: Int,
-    totalModules: Int
+    totalModules: Int,
+    modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
@@ -217,63 +238,62 @@ fun LearningScreenPreview() {
 
 @Composable
 private fun LearningScreenContent() {
-    Column(
+    val sampleModules = getSampleModulesForPreview()
+    
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // Top Bar with Hearts, Coins, and Streak
-        LearningTopBar(
-            hearts = 5,
-            coins = 220,
-            streak = 3
-        )
-        
-        // Course Content
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+        Column(
+            modifier = Modifier.fillMaxSize()
         ) {
-            item {
+            // Top Bar with Hearts, Coins, and Streak
+            LearningTopBar(
+                hearts = 5,
+                coins = 220,
+                streak = 3
+            )
+            
+            // Course Content with Scroll
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
                 // Course Header
                 CourseHeader(
-                    courseName = "Python",
-                    courseDescription = "Aprende los fundamentos de Python desde cero hasta convertirte en un desarrollador competente."
+                    courseName = "JavaScript",
+                    courseDescription = "Aprende los fundamentos de JavaScript desde cero hasta convertirte en un desarrollador competente.",
+                    modifier = Modifier.padding(16.dp)
                 )
-            }
-            
-            item {
+                
                 // Progress Overview
                 ProgressOverview(
-                    progress = 33.3f,
+                    progress = 25f,
                     completedModules = 1,
-                    totalModules = 3
+                    totalModules = 4,
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
-            }
-            
-            item {
+                
+                Spacer(modifier = Modifier.height(16.dp))
+                
+                // Learning Path Title
                 Text(
-                    text = "Módulos del curso",
+                    text = "Tu camino de aprendizaje",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.padding(vertical = 8.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
-            }
-            
-            // Sample Modules for Preview
-            val sampleModules = getSampleModulesForPreview()
-            items(sampleModules) { moduleWithProgress ->
-                ModuleItem(
-                    module = moduleWithProgress.module,
-                    progress = moduleWithProgress.progress,
-                    onClick = { }
+                
+                // Module Path with Curved Design
+                ModulePath(
+                    modules = sampleModules,
+                    onModuleClick = { }
                 )
-            }
-            
-            item {
-                Spacer(modifier = Modifier.height(80.dp))
+                
+                Spacer(modifier = Modifier.height(100.dp)) // Space for bottom navigation
             }
         }
     }
@@ -285,9 +305,9 @@ private fun getSampleModulesForPreview(): List<com.example.kodelearn.data.reposi
             module = com.example.kodelearn.data.database.entities.Module(
                 id = 1,
                 courseId = 1,
-                name = "Python Básico",
-                description = "Fundamentos de Python: variables, tipos de datos y operadores básicos.",
-                totalLessons = 5,
+                name = "Conceptos básicos de JavaScript",
+                description = "Aprende los fundamentos: variables, tipos de datos, operadores y estructuras básicas.",
+                totalLessons = 4,
                 order = 1,
                 isLocked = false,
                 xpReward = 50
@@ -296,8 +316,8 @@ private fun getSampleModulesForPreview(): List<com.example.kodelearn.data.reposi
                 id = 1,
                 userId = 1,
                 moduleId = 1,
-                lessonsCompleted = 2,
-                progressPercentage = 40f,
+                lessonsCompleted = 1,
+                progressPercentage = 25f,
                 isCompleted = false
             )
         ),
@@ -306,11 +326,11 @@ private fun getSampleModulesForPreview(): List<com.example.kodelearn.data.reposi
                 id = 2,
                 courseId = 1,
                 name = "Estructuras de Control",
-                description = "If/else, bucles for y while, manejo de flujo de control.",
-                totalLessons = 4,
+                description = "Domina las estructuras condicionales y bucles para controlar el flujo de tu código.",
+                totalLessons = 5,
                 order = 2,
                 isLocked = true,
-                xpReward = 40
+                xpReward = 60
             ),
             progress = null
         ),
@@ -319,11 +339,37 @@ private fun getSampleModulesForPreview(): List<com.example.kodelearn.data.reposi
                 id = 3,
                 courseId = 1,
                 name = "Funciones y Métodos",
-                description = "Definición de funciones, parámetros, return y scope.",
+                description = "Crea funciones reutilizables y aprende sobre el scope y closures en JavaScript.",
                 totalLessons = 6,
                 order = 3,
                 isLocked = true,
-                xpReward = 60
+                xpReward = 70
+            ),
+            progress = null
+        ),
+        com.example.kodelearn.data.repository.ModuleWithProgress(
+            module = com.example.kodelearn.data.database.entities.Module(
+                id = 4,
+                courseId = 1,
+                name = "Objetos y Arrays",
+                description = "Trabaja con estructuras de datos complejas y manipula objetos y arrays.",
+                totalLessons = 7,
+                order = 4,
+                isLocked = true,
+                xpReward = 80
+            ),
+            progress = null
+        ),
+        com.example.kodelearn.data.repository.ModuleWithProgress(
+            module = com.example.kodelearn.data.database.entities.Module(
+                id = 5,
+                courseId = 1,
+                name = "DOM y Eventos",
+                description = "Interactúa con el DOM y maneja eventos para crear aplicaciones dinámicas.",
+                totalLessons = 8,
+                order = 5,
+                isLocked = true,
+                xpReward = 90
             ),
             progress = null
         )
