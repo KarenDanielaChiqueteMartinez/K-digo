@@ -4,6 +4,7 @@ import com.example.kodelearn.data.database.dao.*
 import com.example.kodelearn.data.database.entities.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 data class ModuleWithProgress(
     val module: Module,
     val progress: Progress?
