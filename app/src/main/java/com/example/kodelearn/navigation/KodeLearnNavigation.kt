@@ -165,7 +165,9 @@ fun KodeLearnNavigation(
                         onNavigateBack = {
                             navController.popBackStack()
                         },
-                        onLessonComplete = {
+                        moduleId = 1,
+                        lessonId = 1,
+                        onLessonCompleted = {
                             navController.popBackStack()
                         }
                     )

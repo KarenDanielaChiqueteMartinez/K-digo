@@ -327,7 +327,7 @@ object ModuleContent {
                     ### Control de bucles:
                     - `break`: Termina el bucle completamente
                     - `continue`: Salta a la siguiente iteración
-                """.trimIndent(),
+                """.trimIndent().replace("\$", "\\$"),
                 questions = listOf(
                     Question(
                         id = 9,

@@ -1,5 +1,6 @@
 package com.example.kodelearn.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -32,12 +33,12 @@ fun LessonScreen(
     onLessonCompleted: () -> Unit
 ) {
     // Nota: En una implementación real, estos DAOs se inyectarían via Dagger/Hilt
-    // Por ahora usamos null para evitar errores de compilación
-    val repository = null // KodeLearnRepository(userDao, courseDao, moduleDao, progressDao)
-    val learningSessionService = LearningSessionService(repository)
-    val lessonService = LessonService(repository, learningSessionService)
+    // Por ahora creamos servicios mock para evitar errores de compilación
+    val repository: KodeLearnRepository? = null
+    val learningSessionService: LearningSessionService? = null
+    val lessonService: LessonService? = null
     
-    val lessonContent = lessonService.getLessonContent(moduleId, lessonId)
+    val lessonContent = lessonService?.getLessonContent(moduleId, lessonId)
     var currentQuestionIndex by remember { mutableStateOf(0) }
     var selectedAnswer by remember { mutableStateOf(-1) }
     var showResult by remember { mutableStateOf(false) }
