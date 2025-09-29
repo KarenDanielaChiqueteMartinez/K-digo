@@ -22,9 +22,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kodelearn.data.repository.KodeLearnRepository
 import com.example.kodelearn.ui.components.KodeLearnButton
 import com.example.kodelearn.ui.components.StatCard
+import com.example.kodelearn.ui.components.ModuleCard
+import com.example.kodelearn.ui.components.UnlockAnimationDialog
 import com.example.kodelearn.ui.theme.*
 import com.example.kodelearn.ui.viewmodel.ProfileViewModel
 import com.example.kodelearn.ui.viewmodel.HomeViewModel
+import com.example.kodelearn.data.learning.ModuleUnlockService
+import com.example.kodelearn.data.content.Module
 
 @Composable
 fun HomeScreen(
@@ -38,6 +42,25 @@ fun HomeScreen(
     val moduleProgress by homeViewModel.moduleProgress.collectAsState()
     val isLoading by homeViewModel.isLoading.collectAsState()
     val error by homeViewModel.error.collectAsState()
+    
+    // Servicio de desbloqueo de módulos
+    val unlockService = remember { ModuleUnlockService(repository) }
+    var modules by remember { mutableStateOf<List<Module>>(emptyList()) }
+    var showUnlockAnimation by remember { mutableStateOf(false) }
+    var unlockedModule by remember { mutableStateOf<Module?>(null) }
+    
+    // Cargar módulos con estado de desbloqueo
+    LaunchedEffect(Unit) {
+        val allModules = unlockService.getAllModulesWithUnlockStatus(1)
+        modules = allModules
+        
+        // Verificar si hay módulos recién desbloqueados
+        val newlyUnlocked = unlockService.checkForNewlyUnlockedModules(1)
+        if (newlyUnlocked.isNotEmpty()) {
+            unlockedModule = newlyUnlocked.first()
+            showUnlockAnimation = true
+        }
+    }
     
     LazyColumn(
         modifier = modifier
@@ -79,6 +102,18 @@ fun HomeScreen(
         }
         
         item {
+            // Modules Section
+            ModulesSection(
+                modules = modules,
+                onModuleClick = { module ->
+                    if (module.isUnlocked) {
+                        homeViewModel.startLesson(module.id, 1)
+                    }
+                }
+            )
+        }
+        
+        item {
             // Continue Learning Section with dynamic progress
             ContinueLearningSection(
                 moduleProgress = moduleProgress,
@@ -98,6 +133,17 @@ fun HomeScreen(
             RecentAchievementsSection()
         }
     }
+    
+    // Diálogo de animación de desbloqueo
+    UnlockAnimationDialog(
+        moduleTitle = unlockedModule?.title ?: "",
+        moduleDescription = unlockedModule?.description ?: "",
+        isVisible = showUnlockAnimation,
+        onDismiss = {
+            showUnlockAnimation = false
+            unlockedModule = null
+        }
+    )
 }
 
 @Composable
@@ -394,6 +440,38 @@ private fun HomeScreenContent() {
         
         item {
             RecentAchievementsSection()
+        }
+    }
+}
+
+@Composable
+private fun ModulesSection(
+    modules: List<Module>,
+    onModuleClick: (Module) -> Unit
+) {
+    Column {
+        Text(
+            text = "Módulos de Aprendizaje",
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+        )
+        
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(modules) { module ->
+                ModuleCard(
+                    title = module.title,
+                    description = module.description,
+                    isUnlocked = module.isUnlocked,
+                    progress = 0f, // TODO: Implementar progreso real
+                    onStartClick = { onModuleClick(module) },
+                    modifier = Modifier.width(280.dp)
+                )
+            }
         }
     }
 }
