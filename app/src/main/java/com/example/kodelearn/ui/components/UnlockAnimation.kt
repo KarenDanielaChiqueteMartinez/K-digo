@@ -84,7 +84,7 @@ private fun UnlockAnimationContent(
     )
     
     // Efectos de partículas
-    val particleAnimation by rememberInfiniteTransition(label = "particles")
+    val particleAnimation = rememberInfiniteTransition(label = "particles")
     val particleOffset by particleAnimation.animateFloat(
         initialValue = 0f,
         targetValue = 1f,

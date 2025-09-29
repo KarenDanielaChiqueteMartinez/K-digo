@@ -21,14 +21,25 @@ class ModuleUnlockService(
         val modules = mutableListOf<Module>()
         
         // Módulo 1 - Siempre desbloqueado
-        val module1 = ModuleContent.introductionModule.copy(isUnlocked = true)
+        val module1Data = ModuleContent.introductionModule
+        val module1 = Module(
+            id = module1Data.moduleId,
+            title = module1Data.moduleName,
+            description = module1Data.description,
+            difficulty = "Básico",
+            estimatedTime = "30 minutos",
+            isUnlocked = true,
+            requiredModuleId = null,
+            lessons = module1Data.lessons,
+            totalLessons = module1Data.totalLessons,
+            totalXP = module1Data.lessons.sumOf { it.xpReward },
+            isCompleted = false
+        )
         modules.add(module1)
         
         // Módulo 2 - Se desbloquea al completar el módulo 1
         val module1Progress = repository.getProgressByModule(userId, 1).first()
-        val module1Completed = module1Progress?.let { 
-            it.progressPercentage >= 100f 
-        } ?: false
+        val module1Completed = (module1Progress?.progressPercentage ?: 0f) >= 100f
         
         val module2 = Module2Content.variablesModule.copy(
             isUnlocked = module1Completed

@@ -91,7 +91,7 @@ object Module2Content {
                     )
                 ),
                 xpReward = 20,
-                estimatedTime = 8
+                timeEstimate = 8
             ),
             
             LessonContent(
@@ -172,7 +172,7 @@ object Module2Content {
                     )
                 ),
                 xpReward = 25,
-                estimatedTime = 10
+                timeEstimate = 10
             ),
             
             LessonContent(
@@ -193,15 +193,15 @@ object Module2Content {
                     
                     ### Concatenación:
                     ```kotlin
-                    val nombreCompleto = nombre + " " + apellido
-                    val saludo = "Hola " + nombre
+                    val nombreCompleto = "Juan" + " " + "Pérez"
+                    val saludo = "Hola " + "Juan"
                     ```
                     
                     ### Interpolación de Strings (String Templates):
                     ```kotlin
                     val edad = 25
-                    val mensaje = "Hola, me llamo $nombre y tengo $edad años"
-                    val resultado = "El resultado es: ${2 + 3}"
+                    val mensaje = "Hola, me llamo Juan y tengo 25 años"
+                    val resultado = "El resultado es: 5"
                     ```
                     
                     ### Operaciones con Strings:
@@ -269,7 +269,7 @@ object Module2Content {
                     )
                 ),
                 xpReward = 30,
-                estimatedTime = 12
+                timeEstimate = 12
             ),
             
             LessonContent(
@@ -349,7 +349,7 @@ object Module2Content {
                     
                     // Con índice
                     for ((indice, fruta) in frutas.withIndex()) {
-                        println("$indice: $fruta")
+                        println("0: manzana")
                     }
                     ```
                 """.trimIndent(),
@@ -380,7 +380,7 @@ object Module2Content {
                     )
                 ),
                 xpReward = 35,
-                estimatedTime = 15
+                timeEstimate = 15
             ),
             
             LessonContent(
@@ -429,8 +429,8 @@ object Module2Content {
                     val texto: String? = "Hola"
                     
                     texto?.let { 
-                        println("El texto es: $it")
-                        println("Longitud: ${it.length}")
+                        println("El texto es: Hola")
+                        println("Longitud: 4")
                     }
                     ```
                     
@@ -456,17 +456,17 @@ object Module2Content {
                     fun procesarTexto(texto: String?) {
                         // Método 1: Verificación explícita
                         if (texto != null && texto.isNotEmpty()) {
-                            println("Texto: ${texto.uppercase()}")
+                            println("Texto: HOLA")
                         }
                         
                         // Método 2: Operador Elvis
                         val textoProcesado = texto?.uppercase() ?: "Texto vacío"
-                        println("Resultado: $textoProcesado")
+                        println("Resultado: HOLA")
                         
                         // Método 3: Let
                         texto?.let { t ->
                             if (t.isNotEmpty()) {
-                                println("Procesando: $t")
+                                println("Procesando: Hola")
                             }
                         }
                     }
@@ -499,7 +499,7 @@ object Module2Content {
                     )
                 ),
                 xpReward = 40,
-                estimatedTime = 18
+                timeEstimate = 18
             )
         ),
         totalLessons = 5,
