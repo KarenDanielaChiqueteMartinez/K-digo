@@ -58,7 +58,7 @@ class ModuleUnlockService(
             2 -> {
                 // Módulo 2 se desbloquea al completar módulo 1
                 val module1Progress = repository.getProgressByModule(userId, 1).first()
-                module1Progress?.progressPercentage >= 100f
+                (module1Progress?.progressPercentage ?: 0f) >= 100f
             }
             else -> false
         }
