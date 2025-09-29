@@ -131,14 +131,14 @@ data class UserFeatureVector(
         
         private fun calculateAccuracyRate(user: User, progressList: List<Progress>): Float {
             // Basado en XP ganado vs tiempo invertido
-            val totalProgress = progressList.sumOf { it.progressPercentage }.toFloat()
+            val totalProgress = progressList.sumOf { it.progressPercentage.toDouble() }.toFloat()
             val timeInvested = progressList.size.toFloat()
             return if (timeInvested > 0) (user.totalXP.toFloat() / (totalProgress * 100)).coerceIn(0f, 1f) else 0f
         }
         
         private fun calculateLearningSpeed(progressList: List<Progress>): Float {
             // Lecciones completadas por día (estimado)
-            val totalLessons = progressList.sumOf { it.lessonsCompleted }
+            val totalLessons = progressList.sumOf { it.lessonsCompleted.toLong() }.toInt()
             val daysSinceStart = 30f // Asumir 30 días de uso
             return (totalLessons.toFloat() / daysSinceStart).coerceAtMost(10f) // Máximo 10 lecciones por día
         }
@@ -182,7 +182,7 @@ data class UserFeatureVector(
         
         private fun calculateTimePerLesson(progressList: List<Progress>): Float {
             // Tiempo estimado por lección (minutos)
-            val totalLessons = progressList.sumOf { it.lessonsCompleted }
+            val totalLessons = progressList.sumOf { it.lessonsCompleted.toLong() }.toInt()
             val estimatedTimePerLesson = 15f // 15 minutos por lección por defecto
             
             return if (totalLessons > 0) {
@@ -193,7 +193,7 @@ data class UserFeatureVector(
         }
         
         private fun calculateCompletionRate(progressList: List<Progress>, totalLessons: Int): Float {
-            val completedLessons = progressList.sumOf { it.lessonsCompleted }
+            val completedLessons = progressList.sumOf { it.lessonsCompleted.toLong() }.toInt()
             return if (totalLessons > 0) {
                 (completedLessons.toFloat() / totalLessons).coerceAtMost(1f)
             } else {
