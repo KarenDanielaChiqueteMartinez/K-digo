@@ -227,11 +227,7 @@ object Module2Content {
                     
                     ### Strings Multilínea:
                     ```kotlin
-                    val mensajeLargo = """
-                        Este es un mensaje
-                        que ocupa múltiples
-                        líneas
-                    """.trimIndent()
+                    val mensajeLargo = "Este es un mensaje que ocupa múltiples líneas"
                     ```
                     
                     ### Comparación de Strings:
