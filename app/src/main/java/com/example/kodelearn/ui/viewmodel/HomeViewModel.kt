@@ -61,6 +61,9 @@ class HomeViewModel(
                 // Simular finalización del módulo 1 para testing
                 lessonService.simulateModuleCompletion(1, 1)
                 
+                // Esperar un momento para que se actualice la base de datos
+                kotlinx.coroutines.delay(100)
+                
                 // Cargar estadísticas del usuario
                 val stats = lessonService.getUserStats(1) // Usar userId = 1 por defecto
                 _userStats.value = stats
@@ -75,6 +78,9 @@ class HomeViewModel(
                 
                 // Verificar si hay módulos recién desbloqueados
                 checkForNewlyUnlockedModules()
+                
+                // Forzar desbloqueo del módulo 2 si el módulo 1 está completado
+                forceModule2UnlockIfNeeded()
                 
             } catch (e: Exception) {
                 _error.value = "Error al cargar datos: ${e.message}"
@@ -176,6 +182,16 @@ class HomeViewModel(
                 if (newlyUnlocked.isNotEmpty()) {
                     _newlyUnlockedModule.value = newlyUnlocked.first()
                 }
+                
+                // Debug: Verificar el estado del módulo 1
+                val module1Progress = repository.getProgressByModule(1, 1).first()
+                println("DEBUG: Módulo 1 progreso: ${module1Progress?.progressPercentage}%")
+                println("DEBUG: Módulo 1 completado: ${module1Progress?.isCompleted}")
+                
+                // Debug: Verificar el estado del módulo 2
+                val module2Unlocked = moduleUnlockService.isModuleUnlocked(1, 2)
+                println("DEBUG: Módulo 2 desbloqueado: $module2Unlocked")
+                
             } catch (e: Exception) {
                 _error.value = "Error al verificar módulos desbloqueados: ${e.message}"
             }
@@ -205,6 +221,30 @@ class HomeViewModel(
             "Módulo desbloqueado"
         } else {
             "Completa el módulo anterior para desbloquear"
+        }
+    }
+    
+    /**
+     * Fuerza el desbloqueo del módulo 2 si el módulo 1 está completado
+     */
+    private fun forceModule2UnlockIfNeeded() {
+        viewModelScope.launch {
+            try {
+                val module1Progress = repository.getProgressByModule(1, 1).first()
+                if (module1Progress?.progressPercentage ?: 0f >= 100f) {
+                    // El módulo 1 está completado, forzar actualización de módulos
+                    val updatedModules = moduleUnlockService.getAllModulesWithUnlockStatus(1)
+                    _allModules.value = updatedModules
+                    
+                    // Si el módulo 2 no está desbloqueado, forzar su desbloqueo
+                    val module2 = updatedModules.find { it.id == 2 }
+                    if (module2?.isUnlocked == true) {
+                        _newlyUnlockedModule.value = module2
+                    }
+                }
+            } catch (e: Exception) {
+                println("Error al forzar desbloqueo del módulo 2: ${e.message}")
+            }
         }
     }
     

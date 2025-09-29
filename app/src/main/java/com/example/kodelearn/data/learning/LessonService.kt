@@ -260,7 +260,7 @@ class LessonService(
         
         // Crear o actualizar progreso
         val progress = com.example.kodelearn.data.database.entities.Progress(
-            id = currentProgress?.id ?: 0,
+            id = currentProgress?.id ?: (userId * 100 + moduleId), // ID único basado en userId y moduleId
             userId = userId,
             moduleId = moduleId,
             lessonsCompleted = completedLessons,
@@ -279,9 +279,12 @@ class LessonService(
         val moduleLessons = getModuleLessons(moduleId)
         val totalLessons = moduleLessons.size
         
+        // Obtener progreso existente o crear uno nuevo
+        val existingProgress = repository.getProgressByModule(userId, moduleId).first()
+        
         // Crear progreso completo
         val progress = com.example.kodelearn.data.database.entities.Progress(
-            id = 0,
+            id = existingProgress?.id ?: (userId * 100 + moduleId), // ID único basado en userId y moduleId
             userId = userId,
             moduleId = moduleId,
             lessonsCompleted = totalLessons,
