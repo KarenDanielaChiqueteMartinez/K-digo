@@ -75,6 +75,11 @@ class LessonService(
         // Actualizar XP del usuario
         updateUserXP(userId, xpGained)
         
+        // Marcar lección como completada si es correcta
+        if (isCorrect) {
+            markLessonAsCompleted(userId, moduleId, lessonId)
+        }
+        
         return AnswerResult(
             isCorrect = isCorrect,
             explanation = question.explanation,
@@ -113,7 +118,7 @@ class LessonService(
         val progress = repository.getProgressByModule(userId, moduleId).first()
         val moduleLessons = getModuleLessons(moduleId)
         val totalLessons = moduleLessons.size
-        val completedLessons = progress?.lessonsCompleted ?: 2 // Datos de prueba: 2 lecciones completadas
+        val completedLessons = progress?.lessonsCompleted ?: 0 // Usar progreso real
         val percentage = if (totalLessons > 0) {
             (completedLessons.toFloat() / totalLessons * 100).coerceAtMost(100f)
         } else {
@@ -242,6 +247,50 @@ class LessonService(
         }
         
         repository.updateDailyStreak(currentStreak)
+    }
+    
+    /**
+     * Marca una lección como completada y actualiza el progreso
+     */
+    suspend fun markLessonAsCompleted(userId: Int, moduleId: Int, lessonId: Int) {
+        // Obtener progreso actual
+        val currentProgress = repository.getProgressByModule(userId, moduleId).first()
+        val completedLessons = (currentProgress?.lessonsCompleted ?: 0) + 1
+        val totalLessons = getModuleLessons(moduleId).size
+        
+        // Crear o actualizar progreso
+        val progress = com.example.kodelearn.data.database.entities.Progress(
+            id = currentProgress?.id ?: 0,
+            userId = userId,
+            moduleId = moduleId,
+            lessonsCompleted = completedLessons,
+            progressPercentage = (completedLessons.toFloat() / totalLessons * 100).coerceAtMost(100f),
+            isCompleted = completedLessons >= totalLessons,
+            lastAccessedAt = System.currentTimeMillis()
+        )
+        
+        repository.insertProgress(progress)
+    }
+
+    /**
+     * Simula la finalización completa de un módulo para testing
+     */
+    suspend fun simulateModuleCompletion(userId: Int, moduleId: Int) {
+        val moduleLessons = getModuleLessons(moduleId)
+        val totalLessons = moduleLessons.size
+        
+        // Crear progreso completo
+        val progress = com.example.kodelearn.data.database.entities.Progress(
+            id = 0,
+            userId = userId,
+            moduleId = moduleId,
+            lessonsCompleted = totalLessons,
+            progressPercentage = 100f,
+            isCompleted = true,
+            lastAccessedAt = System.currentTimeMillis()
+        )
+        
+        repository.insertProgress(progress)
     }
 }
 

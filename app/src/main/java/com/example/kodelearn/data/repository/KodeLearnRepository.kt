@@ -39,6 +39,7 @@ class KodeLearnRepository(
     // Progress operations
     fun getAllProgressByUser(userId: Int): Flow<List<Progress>> = progressDao.getAllProgressByUser(userId)
     fun getProgressByModule(userId: Int, moduleId: Int): Flow<Progress?> = progressDao.getProgressByModule(userId, moduleId)
+    suspend fun insertProgress(progress: Progress) = progressDao.insertProgress(progress)
     suspend fun insertProgressList(progressList: List<Progress>) = progressDao.insertProgressList(progressList)
     suspend fun updateModuleProgress(userId: Int, moduleId: Int, lessonsCompleted: Int, percentage: Float, isCompleted: Boolean) =
         progressDao.updateModuleProgress(userId, moduleId, lessonsCompleted, percentage, isCompleted)

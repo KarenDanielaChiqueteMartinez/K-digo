@@ -40,26 +40,19 @@ fun HomeScreen(
     val uiState by profileViewModel.uiState.collectAsState()
     val userStats by homeViewModel.userStats.collectAsState()
     val moduleProgress by homeViewModel.moduleProgress.collectAsState()
+    val allModules by homeViewModel.allModules.collectAsState()
+    val newlyUnlockedModule by homeViewModel.newlyUnlockedModule.collectAsState()
     val isLoading by homeViewModel.isLoading.collectAsState()
     val error by homeViewModel.error.collectAsState()
     
-    // Servicio de desbloqueo de módulos
-    val unlockService = remember { ModuleUnlockService(repository) }
-    var modules by remember { mutableStateOf<List<Module>>(emptyList()) }
-    var showUnlockAnimation by remember { mutableStateOf(false) }
-    var unlockedModule by remember { mutableStateOf<Module?>(null) }
-    
-    // Cargar módulos con estado de desbloqueo
-    LaunchedEffect(Unit) {
-        val allModules = unlockService.getAllModulesWithUnlockStatus(1)
-        modules = allModules
-        
-        // Verificar si hay módulos recién desbloqueados
-        val newlyUnlocked = unlockService.checkForNewlyUnlockedModules(1)
-        if (newlyUnlocked.isNotEmpty()) {
-            unlockedModule = newlyUnlocked.first()
-            showUnlockAnimation = true
-        }
+    // Mostrar animación de desbloqueo si hay un módulo recién desbloqueado
+    newlyUnlockedModule?.let { module ->
+        UnlockAnimationDialog(
+            moduleTitle = module.title,
+            moduleDescription = module.description,
+            isVisible = true,
+            onDismiss = { homeViewModel.dismissUnlockAnimation() }
+        )
     }
     
     LazyColumn(
@@ -104,7 +97,7 @@ fun HomeScreen(
         item {
             // Modules Section
             ModulesSection(
-                modules = modules,
+                modules = allModules,
                 onModuleClick = { module ->
                     if (module.isUnlocked) {
                         homeViewModel.startLesson(module.id, 1)
@@ -133,17 +126,6 @@ fun HomeScreen(
             RecentAchievementsSection()
         }
     }
-    
-    // Diálogo de animación de desbloqueo
-    UnlockAnimationDialog(
-        moduleTitle = unlockedModule?.title ?: "",
-        moduleDescription = unlockedModule?.description ?: "",
-        isVisible = showUnlockAnimation,
-        onDismiss = {
-            showUnlockAnimation = false
-            unlockedModule = null
-        }
-    )
 }
 
 @Composable
@@ -465,10 +447,18 @@ private fun ModulesSection(
             items(modules) { module ->
                 ModuleCard(
                     title = module.title,
-                    description = module.description,
+                    description = if (module.isUnlocked) {
+                        module.description
+                    } else {
+                        "Completa el módulo anterior para desbloquear"
+                    },
                     isUnlocked = module.isUnlocked,
-                    progress = 0f, // TODO: Implementar progreso real
-                    onStartClick = { onModuleClick(module) },
+                    progress = if (module.isUnlocked) 1f else 0f,
+                    onStartClick = { 
+                        if (module.isUnlocked) {
+                            onModuleClick(module)
+                        }
+                    },
                     modifier = Modifier.width(280.dp)
                 )
             }
