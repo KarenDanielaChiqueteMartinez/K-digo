@@ -113,7 +113,7 @@ class LessonService(
         val progress = repository.getProgressByModule(userId, moduleId).first()
         val moduleLessons = getModuleLessons(moduleId)
         val totalLessons = moduleLessons.size
-        val completedLessons = progress?.lessonsCompleted ?: 0
+        val completedLessons = progress?.lessonsCompleted ?: 2 // Datos de prueba: 2 lecciones completadas
         val percentage = if (totalLessons > 0) {
             (completedLessons.toFloat() / totalLessons * 100).coerceAtMost(100f)
         } else {

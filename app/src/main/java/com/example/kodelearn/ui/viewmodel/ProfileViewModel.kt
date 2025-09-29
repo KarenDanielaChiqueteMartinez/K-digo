@@ -8,6 +8,7 @@ import com.example.kodelearn.data.repository.KodeLearnRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 data class ProfileUiState(
@@ -29,6 +30,12 @@ class ProfileViewModel(
 
     private fun loadUserProfile() {
         viewModelScope.launch {
+            // Crear usuario de prueba si no existe
+            val currentUser = repository.getCurrentUser().first()
+            if (currentUser == null) {
+                repository.createTestUser("Usuario Demo", 1)
+            }
+            
             repository.getCurrentUser().collect { user ->
                 _uiState.value = _uiState.value.copy(
                     user = user,

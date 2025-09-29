@@ -43,6 +43,12 @@ class HomeViewModel(
             try {
                 _isLoading.value = true
                 
+                // Crear usuario de prueba si no existe
+                val currentUser = repository.getCurrentUser().first()
+                if (currentUser == null) {
+                    repository.createTestUser("Usuario Demo", 1)
+                }
+                
                 // Cargar estadísticas del usuario
                 val stats = lessonService.getUserStats(1) // Usar userId = 1 por defecto
                 _userStats.value = stats
