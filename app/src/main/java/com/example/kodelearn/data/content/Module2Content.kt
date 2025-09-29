@@ -247,266 +247,267 @@ object Module2Content {
                     ```
                 """.trimIndent(),
                 questions = listOf(
-                    id = 15,
-                    question = "¿Cuál es la forma correcta de interpolar variables en strings?",
-                    options = listOf(
-                        "val mensaje = 'Hola $nombre'",
-                        "val mensaje = \"Hola $nombre\"",
-                        "val mensaje = 'Hola + nombre'",
-                        "val mensaje = \"Hola + nombre\""
+                    Question(
+                        id = 15,
+                        question = "¿Cuál es la forma correcta de interpolar variables en strings?",
+                        options = listOf(
+                            "val mensaje = 'Hola $nombre'",
+                            "val mensaje = \"Hola $nombre\"",
+                            "val mensaje = 'Hola + nombre'",
+                            "val mensaje = \"Hola + nombre\""
+                        ),
+                        correctAnswer = 1,
+                        explanation = "La interpolación de strings usa comillas dobles y el símbolo $ para variables."
                     ),
-                    correctAnswer = 1,
-                    explanation = "La interpolación de strings usa comillas dobles y el símbolo $ para variables."
+                    Question(
+                        id = 16,
+                        question = "¿Qué hace el método trim() en un string?",
+                        options = listOf(
+                            "Convierte a mayúsculas",
+                            "Elimina espacios al inicio y final",
+                            "Divide el string en partes",
+                            "Convierte a minúsculas"
+                        ),
+                        correctAnswer = 1,
+                        explanation = "trim() elimina los espacios en blanco al inicio y final del string."
+                    )
                 ),
-                Question(
-                    id = 16,
-                    question = "¿Qué hace el método trim() en un string?",
-                    options = listOf(
-                        "Convierte a mayúsculas",
-                        "Elimina espacios al inicio y final",
-                        "Divide el string en partes",
-                        "Convierte a minúsculas"
-                    ),
-                    correctAnswer = 1,
-                    explanation = "trim() elimina los espacios en blanco al inicio y final del string."
-                )
+                xpReward = 30,
+                estimatedTime = 12
             ),
-            xpReward = 30,
-            estimatedTime = 12
-        ),
-        
-        LessonContent(
-            id = 9,
-            title = "Arrays y Listas",
-            description = "Colecciones de datos ordenadas",
-            content = """
-                ## Arrays y Listas en Kotlin
-                
-                ### Arrays (Tamaño fijo):
-                ```kotlin
-                // Declaración
-                val numeros = arrayOf(1, 2, 3, 4, 5)
-                val nombres = arrayOf("Ana", "Luis", "María")
-                
-                // Acceso a elementos
-                val primerNumero = numeros[0]
-                val ultimoNombre = nombres[nombres.size - 1]
-                
-                // Modificar elementos
-                numeros[0] = 10
-                ```
-                
-                ### Listas (Tamaño variable):
-                ```kotlin
-                // Lista inmutable
-                val frutas = listOf("manzana", "banana", "naranja")
-                
-                // Lista mutable
-                val colores = mutableListOf("rojo", "verde", "azul")
-                colores.add("amarillo")
-                colores.remove("verde")
-                
-                // Acceso y modificación
-                val primerColor = colores[0]
-                colores[1] = "morado"
-                ```
-                
-                ### Operaciones Comunes:
-                ```kotlin
-                val numeros = listOf(1, 2, 3, 4, 5)
-                
-                // Tamaño
-                val cantidad = numeros.size
-                
-                // Verificar si está vacía
-                val vacia = numeros.isEmpty()
-                
-                // Buscar elemento
-                val contiene = numeros.contains(3)
-                val indice = numeros.indexOf(3)
-                
-                // Filtrar
-                val pares = numeros.filter { it % 2 == 0 }
-                
-                // Transformar
-                val dobles = numeros.map { it * 2 }
-                
-                // Reducir
-                val suma = numeros.sum()
-                val producto = numeros.reduce { acc, num -> acc * num }
-                ```
-                
-                ### Iteración:
-                ```kotlin
-                val frutas = listOf("manzana", "banana", "naranja")
-                
-                // For tradicional
-                for (fruta in frutas) {
-                    println(fruta)
-                }
-                
-                // ForEach
-                frutas.forEach { fruta ->
-                    println(fruta)
-                }
-                
-                // Con índice
-                for ((indice, fruta) in frutas.withIndex()) {
-                    println("$indice: $fruta")
-                }
-                ```
-            """.trimIndent(),
-            questions = listOf(
-                Question(
-                    id = 17,
-                    question = "¿Cuál es la diferencia principal entre Array y List?",
-                    options = listOf(
-                        "Array es más rápido que List",
-                        "Array tiene tamaño fijo, List es variable",
-                        "List solo funciona con números",
-                        "No hay diferencia"
-                    ),
-                    correctAnswer = 1,
-                    explanation = "Array tiene un tamaño fijo definido al crear, mientras que List puede cambiar de tamaño dinámicamente."
-                ),
-                Question(
-                    id = 18,
-                    question = "¿Cómo se agrega un elemento a una lista mutable?",
-                    options = listOf(
-                        "lista[0] = elemento",
-                        "lista.add(elemento)",
-                        "lista.insert(elemento)",
-                        "lista.append(elemento)"
-                    ),
-                    correctAnswer = 1,
-                    explanation = "Se usa el método add() para agregar elementos a una lista mutable."
-                )
-            ),
-            xpReward = 35,
-            estimatedTime = 15
-        ),
-        
-        LessonContent(
-            id = 10,
-            title = "Null Safety",
-            description = "Manejo seguro de valores nulos",
-            content = """
-                ## Null Safety en Kotlin
-                
-                Kotlin previene errores de NullPointerException con null safety.
-                
-                ### Tipos Nullables:
-                ```kotlin
-                // Tipo no nullable (por defecto)
-                val nombre: String = "Juan"  // No puede ser null
-                
-                // Tipo nullable
-                val apellido: String? = null  // Puede ser null
-                val edad: Int? = null
-                ```
-                
-                ### Verificación de Null:
-                ```kotlin
-                val texto: String? = "Hola"
-                
-                // Verificación explícita
-                if (texto != null) {
-                    println(texto.length)  // Safe call
-                }
-                
-                // Operador de llamada segura
-                val longitud = texto?.length  // Retorna null si texto es null
-                
-                // Operador Elvis (?:)
-                val longitudSegura = texto?.length ?: 0  // 0 si texto es null
-                ```
-                
-                ### Operador de Aserción No-Null (!!):
-                ```kotlin
-                val texto: String? = "Hola"
-                val longitud = texto!!.length  // Lanza excepción si es null
-                ```
-                
-                ### Let para Null Safety:
-                ```kotlin
-                val texto: String? = "Hola"
-                
-                texto?.let { 
-                    println("El texto es: $it")
-                    println("Longitud: ${it.length}")
-                }
-                ```
-                
-                ### Inicialización Tardía (lateinit):
-                ```kotlin
-                class MiClase {
-                    lateinit var nombre: String
+            
+            LessonContent(
+                id = 9,
+                title = "Arrays y Listas",
+                description = "Colecciones de datos ordenadas",
+                content = """
+                    ## Arrays y Listas en Kotlin
                     
-                    fun inicializar() {
-                        nombre = "Juan"  // Debe inicializarse antes de usar
+                    ### Arrays (Tamaño fijo):
+                    ```kotlin
+                    // Declaración
+                    val numeros = arrayOf(1, 2, 3, 4, 5)
+                    val nombres = arrayOf("Ana", "Luis", "María")
+                    
+                    // Acceso a elementos
+                    val primerNumero = numeros[0]
+                    val ultimoNombre = nombres[nombres.size - 1]
+                    
+                    // Modificar elementos
+                    numeros[0] = 10
+                    ```
+                    
+                    ### Listas (Tamaño variable):
+                    ```kotlin
+                    // Lista inmutable
+                    val frutas = listOf("manzana", "banana", "naranja")
+                    
+                    // Lista mutable
+                    val colores = mutableListOf("rojo", "verde", "azul")
+                    colores.add("amarillo")
+                    colores.remove("verde")
+                    
+                    // Acceso y modificación
+                    val primerColor = colores[0]
+                    colores[1] = "morado"
+                    ```
+                    
+                    ### Operaciones Comunes:
+                    ```kotlin
+                    val numeros = listOf(1, 2, 3, 4, 5)
+                    
+                    // Tamaño
+                    val cantidad = numeros.size
+                    
+                    // Verificar si está vacía
+                    val vacia = numeros.isEmpty()
+                    
+                    // Buscar elemento
+                    val contiene = numeros.contains(3)
+                    val indice = numeros.indexOf(3)
+                    
+                    // Filtrar
+                    val pares = numeros.filter { it % 2 == 0 }
+                    
+                    // Transformar
+                    val dobles = numeros.map { it * 2 }
+                    
+                    // Reducir
+                    val suma = numeros.sum()
+                    val producto = numeros.reduce { acc, num -> acc * num }
+                    ```
+                    
+                    ### Iteración:
+                    ```kotlin
+                    val frutas = listOf("manzana", "banana", "naranja")
+                    
+                    // For tradicional
+                    for (fruta in frutas) {
+                        println(fruta)
                     }
                     
-                    fun usar() {
-                        if (::nombre.isInitialized) {
-                            println(nombre)
+                    // ForEach
+                    frutas.forEach { fruta ->
+                        println(fruta)
+                    }
+                    
+                    // Con índice
+                    for ((indice, fruta) in frutas.withIndex()) {
+                        println("$indice: $fruta")
+                    }
+                    ```
+                """.trimIndent(),
+                questions = listOf(
+                    Question(
+                        id = 17,
+                        question = "¿Cuál es la diferencia principal entre Array y List?",
+                        options = listOf(
+                            "Array es más rápido que List",
+                            "Array tiene tamaño fijo, List es variable",
+                            "List solo funciona con números",
+                            "No hay diferencia"
+                        ),
+                        correctAnswer = 1,
+                        explanation = "Array tiene un tamaño fijo definido al crear, mientras que List puede cambiar de tamaño dinámicamente."
+                    ),
+                    Question(
+                        id = 18,
+                        question = "¿Cómo se agrega un elemento a una lista mutable?",
+                        options = listOf(
+                            "lista[0] = elemento",
+                            "lista.add(elemento)",
+                            "lista.insert(elemento)",
+                            "lista.append(elemento)"
+                        ),
+                        correctAnswer = 1,
+                        explanation = "Se usa el método add() para agregar elementos a una lista mutable."
+                    )
+                ),
+                xpReward = 35,
+                estimatedTime = 15
+            ),
+            
+            LessonContent(
+                id = 10,
+                title = "Null Safety",
+                description = "Manejo seguro de valores nulos",
+                content = """
+                    ## Null Safety en Kotlin
+                    
+                    Kotlin previene errores de NullPointerException con null safety.
+                    
+                    ### Tipos Nullables:
+                    ```kotlin
+                    // Tipo no nullable (por defecto)
+                    val nombre: String = "Juan"  // No puede ser null
+                    
+                    // Tipo nullable
+                    val apellido: String? = null  // Puede ser null
+                    val edad: Int? = null
+                    ```
+                    
+                    ### Verificación de Null:
+                    ```kotlin
+                    val texto: String? = "Hola"
+                    
+                    // Verificación explícita
+                    if (texto != null) {
+                        println(texto.length)  // Safe call
+                    }
+                    
+                    // Operador de llamada segura
+                    val longitud = texto?.length  // Retorna null si texto es null
+                    
+                    // Operador Elvis (?:)
+                    val longitudSegura = texto?.length ?: 0  // 0 si texto es null
+                    ```
+                    
+                    ### Operador de Aserción No-Null (!!):
+                    ```kotlin
+                    val texto: String? = "Hola"
+                    val longitud = texto!!.length  // Lanza excepción si es null
+                    ```
+                    
+                    ### Let para Null Safety:
+                    ```kotlin
+                    val texto: String? = "Hola"
+                    
+                    texto?.let { 
+                        println("El texto es: $it")
+                        println("Longitud: ${it.length}")
+                    }
+                    ```
+                    
+                    ### Inicialización Tardía (lateinit):
+                    ```kotlin
+                    class MiClase {
+                        lateinit var nombre: String
+                        
+                        fun inicializar() {
+                            nombre = "Juan"  // Debe inicializarse antes de usar
+                        }
+                        
+                        fun usar() {
+                            if (::nombre.isInitialized) {
+                                println(nombre)
+                            }
                         }
                     }
-                }
-                ```
-                
-                ### Ejemplos Prácticos:
-                ```kotlin
-                fun procesarTexto(texto: String?) {
-                    // Método 1: Verificación explícita
-                    if (texto != null && texto.isNotEmpty()) {
-                        println("Texto: ${texto.uppercase()}")
-                    }
+                    ```
                     
-                    // Método 2: Operador Elvis
-                    val textoProcesado = texto?.uppercase() ?: "Texto vacío"
-                    println("Resultado: $textoProcesado")
-                    
-                    // Método 3: Let
-                    texto?.let { t ->
-                        if (t.isNotEmpty()) {
-                            println("Procesando: $t")
+                    ### Ejemplos Prácticos:
+                    ```kotlin
+                    fun procesarTexto(texto: String?) {
+                        // Método 1: Verificación explícita
+                        if (texto != null && texto.isNotEmpty()) {
+                            println("Texto: ${texto.uppercase()}")
+                        }
+                        
+                        // Método 2: Operador Elvis
+                        val textoProcesado = texto?.uppercase() ?: "Texto vacío"
+                        println("Resultado: $textoProcesado")
+                        
+                        // Método 3: Let
+                        texto?.let { t ->
+                            if (t.isNotEmpty()) {
+                                println("Procesando: $t")
+                            }
                         }
                     }
-                }
-                ```
-            """.trimIndent(),
-            questions = listOf(
-                Question(
-                    id = 19,
-                    question = "¿Qué operador se usa para llamadas seguras en Kotlin?",
-                    options = listOf(
-                        "!",
-                        "?",
-                        "!!",
-                        "??"
+                    ```
+                """.trimIndent(),
+                questions = listOf(
+                    Question(
+                        id = 19,
+                        question = "¿Qué operador se usa para llamadas seguras en Kotlin?",
+                        options = listOf(
+                            "!",
+                            "?",
+                            "!!",
+                            "??"
+                        ),
+                        correctAnswer = 1,
+                        explanation = "El operador ? se usa para llamadas seguras, evitando NullPointerException."
                     ),
-                    correctAnswer = 1,
-                    explanation = "El operador ? se usa para llamadas seguras, evitando NullPointerException."
+                    Question(
+                        id = 20,
+                        question = "¿Qué hace el operador Elvis (?:)?",
+                        options = listOf(
+                            "Convierte a mayúsculas",
+                            "Proporciona un valor por defecto si es null",
+                            "Elimina espacios",
+                            "Divide strings"
+                        ),
+                        correctAnswer = 1,
+                        explanation = "El operador Elvis (?:) proporciona un valor por defecto cuando la expresión es null."
+                    )
                 ),
-                Question(
-                    id = 20,
-                    question = "¿Qué hace el operador Elvis (?:)?",
-                    options = listOf(
-                        "Convierte a mayúsculas",
-                        "Proporciona un valor por defecto si es null",
-                        "Elimina espacios",
-                        "Divide strings"
-                    ),
-                    correctAnswer = 1,
-                    explanation = "El operador Elvis (?:) proporciona un valor por defecto cuando la expresión es null."
-                )
-            ),
-            xpReward = 40,
-            estimatedTime = 18
-        )
-    ),
-    totalLessons = 5,
-    totalXP = 150,
-    isCompleted = false
-)
+                xpReward = 40,
+                estimatedTime = 18
+            )
+        ),
+        totalLessons = 5,
+        totalXP = 150,
+        isCompleted = false
+    )
 }
