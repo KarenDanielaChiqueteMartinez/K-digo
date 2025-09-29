@@ -247,8 +247,8 @@ object Module2Content {
                         id = 15,
                         question = "¿Cuál es la forma correcta de interpolar variables en strings?",
                         options = listOf(
-                            "val mensaje = 'Hola \\$nombre'",
-                            "val mensaje = \"Hola \\$nombre\"",
+                            "val mensaje = 'Hola + variable'",
+                            "val mensaje = \"Hola + variable\"",
                             "val mensaje = 'Hola + nombre'",
                             "val mensaje = \"Hola + nombre\""
                         ),
