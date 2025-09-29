@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kodelearn.data.content.Question
 import com.example.kodelearn.data.content.LessonContent
+import com.example.kodelearn.data.content.ModuleContent
 import com.example.kodelearn.data.learning.LessonService
 import com.example.kodelearn.data.learning.LearningSessionService
 import com.example.kodelearn.data.repository.KodeLearnRepository

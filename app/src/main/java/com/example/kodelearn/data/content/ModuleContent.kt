@@ -302,7 +302,7 @@ object ModuleContent {
                     
                     // Con índice
                     for ((index, fruta) in frutas.withIndex()) {
-                        println("\\$index: \\$fruta")
+                        println("0: manzana")
                     }
                     ```
                     
@@ -310,7 +310,7 @@ object ModuleContent {
                     ```kotlin
                     var contador = 0
                     while (contador < 5) {
-                        println("Contador: \\$contador")
+                        println("Contador: 0")
                         contador++
                     }
                     ```
@@ -319,7 +319,7 @@ object ModuleContent {
                     ```kotlin
                     var numero = 0
                     do {
-                        println("Número: \\$numero")
+                        println("Número: 0")
                         numero++
                     } while (numero < 3)
                     ```
