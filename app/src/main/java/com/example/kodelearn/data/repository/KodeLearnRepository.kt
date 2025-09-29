@@ -54,4 +54,30 @@ class KodeLearnRepository(
             }
         }
     }
+    
+    // ML/Recommendation operations
+    suspend fun getAllUsersWithProgress(): List<Pair<User, List<Progress>>> {
+        val users = getAllUsers().first()
+        return users.map { user ->
+            val progress = getAllProgressByUser(user.id).first()
+            Pair(user, progress)
+        }
+    }
+    
+    suspend fun getUserWithProgress(userId: Int): Pair<User?, List<Progress>> {
+        val user = getCurrentUser().first()
+        val progress = getAllProgressByUser(userId).first()
+        return Pair(user, progress)
+    }
+    
+    suspend fun getTotalLessonsCount(): Int {
+        // Obtener el total de lecciones de todos los módulos
+        val courses = getAllCourses().first()
+        var totalLessons = 0
+        courses.forEach { course ->
+            val modules = getModulesByCourse(course.id).first()
+            totalLessons += modules.sumOf { it.totalLessons }
+        }
+        return totalLessons
+    }
 }
