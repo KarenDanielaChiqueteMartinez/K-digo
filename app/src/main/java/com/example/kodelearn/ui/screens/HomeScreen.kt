@@ -233,7 +233,7 @@ private fun ContinueLearningSection(
             moduleProgress?.let { progress ->
                 Spacer(modifier = Modifier.height(8.dp))
                 LinearProgressIndicator(
-                    progress = { progress.progressPercentage / 100f },
+                    progress = progress.progressPercentage / 100f,
                     modifier = Modifier.fillMaxWidth(),
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -382,7 +382,10 @@ private fun HomeScreenContent() {
         }
         
         item {
-            ContinueLearningSection()
+            ContinueLearningSection(
+                moduleProgress = null,
+                onStartLesson = { _, _ -> }
+            )
         }
         
         item {
