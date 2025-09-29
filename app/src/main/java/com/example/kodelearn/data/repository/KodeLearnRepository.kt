@@ -81,4 +81,43 @@ class KodeLearnRepository(
         }
         return totalLessons
     }
+    
+    // Métodos adicionales para el sistema de aprendizaje dinámico
+    suspend fun getUserById(userId: Int): User? {
+        val users = getAllUsers().first()
+        return users.find { it.id == userId }
+    }
+    
+    suspend fun createTestUser(name: String, id: Int = (System.currentTimeMillis() % 10000).toInt()): User {
+        val testUser = User(
+            id = id,
+            name = name,
+            biography = "Usuario de prueba para testing",
+            dailyStreak = 0,
+            totalXP = 0,
+            league = "Bronze",
+            avatarUrl = "",
+            hearts = 5,
+            coins = 0
+        )
+        insertUser(testUser)
+        return testUser
+    }
+    
+    suspend fun resetUserProgress(userId: Int) {
+        val userProgress = getAllProgressByUser(userId).first()
+        // Aquí podrías implementar lógica para resetear el progreso
+        // Por ahora solo actualizamos el XP y racha a 0
+        updateXP(0)
+        updateDailyStreak(0)
+    }
+    
+    suspend fun getModuleById(moduleId: Int): Module? {
+        val courses = getAllCourses().first()
+        courses.forEach { course ->
+            val modules = getModulesByCourse(course.id).first()
+            modules.find { it.id == moduleId }?.let { return it }
+        }
+        return null
+    }
 }

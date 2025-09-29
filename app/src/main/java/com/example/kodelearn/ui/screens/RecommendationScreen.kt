@@ -143,6 +143,21 @@ fun RecommendationScreen(
                         Text("Validar Modelo")
                     }
                 }
+                
+                // Botón para generar datos de prueba
+                item {
+                    Button(
+                        onClick = { 
+                            // Aquí podrías navegar a la pantalla de prueba de aprendizaje
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.secondary
+                        )
+                    ) {
+                        Text("Generar Datos de Prueba")
+                    }
+                }
             }
         } else {
             Box(
