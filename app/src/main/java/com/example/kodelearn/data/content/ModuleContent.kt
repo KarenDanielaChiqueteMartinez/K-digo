@@ -302,7 +302,7 @@ object ModuleContent {
                     
                     // Con índice
                     for ((index, fruta) in frutas.withIndex()) {
-                        println("\$index: \$fruta")
+                        println("\\$index: \\$fruta")
                     }
                     ```
                     
@@ -310,7 +310,7 @@ object ModuleContent {
                     ```kotlin
                     var contador = 0
                     while (contador < 5) {
-                        println("Contador: \$contador")
+                        println("Contador: \\$contador")
                         contador++
                     }
                     ```
@@ -319,7 +319,7 @@ object ModuleContent {
                     ```kotlin
                     var numero = 0
                     do {
-                        println("Número: \$numero")
+                        println("Número: \\$numero")
                         numero++
                     } while (numero < 3)
                     ```
@@ -327,7 +327,7 @@ object ModuleContent {
                     ### Control de bucles:
                     - `break`: Termina el bucle completamente
                     - `continue`: Salta a la siguiente iteración
-                """.trimIndent().replace("\$", "\\$"),
+                """.trimIndent(),
                 questions = listOf(
                     Question(
                         id = 9,
